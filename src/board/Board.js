@@ -1,10 +1,25 @@
 import React, { Component } from 'react';
 import './Board.css';
-
-const SquareView = ({ value, onClickProp }) => {
-    return (
-        <div className="square" onClick={() => onClickProp()}> { value}</div>
-    );
+const calculateWinner = (squares) => {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+    if (squares && squares.length) {
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if (squares[a].value && squares[a].value === squares[b].value && squares[a].value === squares[c].value) {
+                return squares[a].value;
+            }
+        }
+    }
+    return null;
 }
 export class SquareObj {
     constructor(id = '', value = '') {
@@ -12,8 +27,20 @@ export class SquareObj {
         this.value = value
     }
 }
-export const HistoryGame = ({gameLength}) => {
-    
+const Square = ({ value, onClickProp }) => {
+    return (
+        <div className="square" onClick={() => onClickProp()}> { value}</div>
+    );
+}
+const HistoryItem = ({ index, onClickFn }) => {
+    return <li onClick={() => onClickFn()}>Go to movement {index + 1}</li>
+}
+const MovementOrWinnerView = ({ boardActualGame, isPlayingX }) => {
+    const calculated = calculateWinner(boardActualGame);
+    if (boardActualGame && boardActualGame.length && calculated) {
+        return <h4>The winner is {calculated}</h4>
+    }
+    return <h4>The next movement is: {isPlayingX ? 'X': 'O'}</h4>
 }
 export class Board extends Component {
     constructor() {
@@ -35,33 +62,26 @@ export class Board extends Component {
     fillInitialArray(length_) {
         var arr = new Array(length_);
         for (var i = 0; i < length_; i++) {
-            arr[i] = new SquareObj(i, '*')
+            arr[i] = new SquareObj(i)
         }
         return arr;
     }
     handleClick(index) {
-        // update actual board, push the actual board into the history, calculate a winner, etc
         let { isPlayingX, boardActualGame, historyGame } = this.state;
-        // clone the array, remember that this is an array of objects, even though you clone the array
-        // the references to the objects are the same let cloned = [...arr] won't work
-        let cloneActualGame = JSON.parse(JSON.stringify(boardActualGame));
-        // concat the arrays
-        historyGame = [...historyGame, cloneActualGame];
-        cloneActualGame[index].value = isPlayingX ? 'X' : 'O';
-        this.setState((state) => {
-            return {
-                boardActualGame: cloneActualGame,
-                isPlayingX: !isPlayingX,
-                historyGame: historyGame
-            }
-        }, () => {
-            this.calculateWinner();
-        });
+        if (!calculateWinner(boardActualGame)) {
+            let cloneActualGame = JSON.parse(JSON.stringify(boardActualGame));
+            historyGame = [...historyGame, cloneActualGame];
+            cloneActualGame[index].value = isPlayingX ? 'X' : 'O';
+            this.setState((state) => {
+                return {
+                    boardActualGame: cloneActualGame,
+                    isPlayingX: !isPlayingX,
+                    historyGame: historyGame
+                }
+            });
+        }
     }
-    calculateWinner() {
-
-    }
-    goToMovement(index){
+    goToMovement(index) {
         let boardGameAt = this.state.historyGame[index];
         console.log(boardGameAt);
         this.setState(state => {
@@ -71,42 +91,49 @@ export class Board extends Component {
             }
         })
     }
-
     renderSquare({ id, value }) {
         return (
-            <SquareView
+            <Square
                 key={id}
                 value={value}
                 onClickProp={() => this.handleClick(id)}
             />
         )
     }
-    renderHistory(historyGame){
-        if(historyGame && historyGame.length){
-            // iterate the array
-            return <ul>
-                {
-                    historyGame.map((val, index) => {
-                        return <li key={index} onClick={ () => this.goToMovement(index)}>Go to movement { index + 1 }</li>
-                    })
-                }
-            </ul>
-            
-        }
+    renderHistoryItem(index) {
+        return (
+            <HistoryItem
+                key={index}
+                index={index}
+                onClickFn={() => this.goToMovement(index)}
+            />
+        )
+
     }
     render() {
-        const { boardActualGame, historyGame } = this.state;
+        const { boardActualGame, historyGame, isPlayingX } = this.state;
+        console.log(historyGame, 'his');
         return <div className="containerTic">
-            <div className="board">
+            <div className="boardWrapper">
+                <div className="boardTitle">
+                    <MovementOrWinnerView
+                    boardActualGame = { boardActualGame }
+                    isPlayingX = { isPlayingX }
+                    />
+                </div>
+                <div className="boardGrid">
                 {
                     boardActualGame.map(square => this.renderSquare(square))
                 }
+                </div>
             </div>
             <div className="historyGame">
                 <h4>Game movements</h4>
-                {
-                    this.renderHistory(historyGame)
-                }
+                <ul>
+                    {
+                        historyGame.map((val, index) => this.renderHistoryItem(index))
+                    }
+                </ul>
             </div>
         </div>
 
