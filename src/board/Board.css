@@ -1,3 +1,15 @@
+.containerTic{
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 50px;
+    
+}
+@media(max-width:768px){
+    .containerTic{
+        grid-template-columns: 1fr;
+    }
+    
+}
 .board{
     width: 250px;
     height: 250px;
@@ -18,4 +30,18 @@
 }
 .square:hover{
     color: #282c34;
+}
+
+.historyGame ul {
+    padding: 0;
+    list-style: none;
+}
+.historyGame li{
+    margin: 0 auto 1rem auto;
+    text-transform: capitalize;
+    max-width: 160px;
+    cursor: pointer;
+    box-shadow: 1px 1px 5px 1px teal;
+    padding: 6px 10px;
+    text-align: center;
 }
