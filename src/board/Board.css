@@ -1,0 +1,21 @@
+.board{
+    width: 250px;
+    height: 250px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    background-color: tomato;
+    gap: 1rem;
+    border-radius: 2px;
+    margin: 2rem auto auto auto;
+}
+.square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+.square:hover{
+    color: #282c34;
+}
