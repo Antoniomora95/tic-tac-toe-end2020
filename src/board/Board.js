@@ -27,7 +27,7 @@ export class SquareObj {
         this.value = value
     }
 }
-const Square = ({ value, onClickProp }) => {
+const Square = ({ value, onClickProp, winner }) => {
     const [disabled, setDisabled] = useState(false);
     useEffect(() => {
         console.log('run effect', disabled);
@@ -39,8 +39,10 @@ const Square = ({ value, onClickProp }) => {
     }, [value])
     return (
         <button className="square" disabled={disabled} onClick={() => {
-            setDisabled(true);
-            onClickProp()
+            if( !winner ){
+                setDisabled(true)
+                onClickProp();
+            }
         }}> { value }</button>
     );
 }
@@ -79,6 +81,7 @@ export class Board extends Component {
         return arr;
     }
     handleClick(index) {
+        console.log('click');
         let { isPlayingX, boardActualGame, historyGame } = this.state;
         if (!calculateWinner(boardActualGame)) {
             let cloneActualGame = JSON.parse(JSON.stringify(boardActualGame));
@@ -116,6 +119,7 @@ export class Board extends Component {
             <Square
                 key={id}
                 value={value}
+                winner={!!calculateWinner(this.state.boardActualGame)}
                 onClickProp={() => this.handleClick(id)}
             />
         )
