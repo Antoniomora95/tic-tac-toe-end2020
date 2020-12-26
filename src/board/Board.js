@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import './Board.css';
 const calculateWinner = (squares) => {
     const lines = [
@@ -28,10 +28,18 @@ export class SquareObj {
     }
 }
 const Square = ({ value, onClickProp }) => {
-    const [disabled, setDisabled] = useState(false)
+    const [disabled, setDisabled] = useState(false);
+    useEffect(() => {
+        console.log('run effect', disabled);
+        if(!value && disabled){
+            // if the square receive an empty value and it was previously disabled, then enable it again
+            setDisabled(false);
+        }
+        return () => null
+    }, [value])
     return (
         <button className="square" disabled={disabled} onClick={() => {
-            setDisabled({disabled: !disabled});
+            setDisabled(true);
             onClickProp()
         }}> { value }</button>
     );
