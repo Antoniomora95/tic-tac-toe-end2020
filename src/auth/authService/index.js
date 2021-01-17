@@ -1,13 +1,21 @@
 
-import { app, database } from '../../firebase/configuration';
+import { app, database, provider } from '../../firebase/configuration';
 import { DB_REF_PLAYERS } from '../../common/constants.json'
 
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
-export const signupPlayer = async (uid, name, email, imageUrl) => {
+export const signupPlayer = async (player) => {
     try {
-        const player = { uid, name, email, imageUrl };
+        let {uid} = player;
         await database.ref(`${DB_REF_PLAYERS}/${uid}`).set(player);
         return true;
+    } catch (error) {
+        throw error;
+    }
+}
+export const loginWithPopup = async() => {
+    try {
+        let { user }  = await app.auth().signInWithPopup(provider);
+        return user;
     } catch (error) {
         throw error;
     }
@@ -22,13 +30,13 @@ export const findOnePlayer = async (uid) => {
     }
 }
 
-export const signOutPlayer = (updateAuthContext, history) => {
+export const signOutPlayer = (updateAuthContext) => {
     return async () => {
         try {
             await app.auth().signOut();
             updateAuthContext({})
         } catch (error) {
-            console.log(error);
+            throw error;
         }
     }
 }
