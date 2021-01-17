@@ -1,33 +1,33 @@
 import React, {useCallback, useContext} from 'react';
 import { app, provider } from '../../firebase/configuration';
 import { AuthContext } from '../authContext';
-import {findOnePlayer, stringifyError} from './signinService';
+import {findOnePlayer, signupPlayer, stringifyError} from './signinService';
 
-export const Login = ( { history } ) => {
+export const Login = ({ history }) => {
     const { setCurrentUser } = useContext(AuthContext);
-
+    
     const callback = useCallback(async () => {
             try {
                 let result = await app.auth().signInWithPopup(provider)
                 var {  user } = result;
                 //var { idToken } = credential;
                 //extract the info from user
-                let { uid } = user;
+                let { displayName, email, photoURL, uid } = user;
                 // check if the user is already in db
                 let userDB = await findOnePlayer(uid);
                 if(!userDB){
-                    //redirect to register flow
-                    history.push("/signup");
+                    signupPlayer(uid, displayName, email, photoURL);
+                    // i should set the context here
                 } else {
                     // i should set the context here
-                    setCurrentUser(userDB);
+                    //redirect there is an existent account
                     history.push("/")
                 }
             } catch (error) {
-                 console.log(stringifyError(error));
+                return stringifyError(error);
             }
         },
-        []
+        [history]
       )
 
     return (

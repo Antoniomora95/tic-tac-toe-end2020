@@ -1,9 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-
-
+import "firebase/database";
 
 const app = firebase.initializeApp({
+    databaseURL: process.env.REACT_APP_DATABASE,
     apiKey: process.env.REACT_APP_FIREBASE_KEY,
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
     projectId: process.env.REACT_APP_PROJECT_ID,
@@ -12,5 +12,15 @@ const app = firebase.initializeApp({
     appId: process.env.REACT_APP_APP_ID
 });
 
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.addScope('profile');
+provider.addScope('email');
 
-export default app;
+
+const database = app.database();
+
+
+
+export  {
+    provider, app, database
+}

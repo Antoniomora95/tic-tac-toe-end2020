@@ -3,7 +3,9 @@ import React from 'react'
 export const SignUp = () => {
     return (
         <div>
-            signup page
+            <button>
+                Signup
+            </button>
         </div>
     )
 }
