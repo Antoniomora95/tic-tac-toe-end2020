@@ -1,6 +1,5 @@
 import React, { useContext} from 'react';
 import { Player } from '../../common/Player';
-import { app, provider } from '../../firebase/configuration';
 import { AuthContext } from '../authContext';
 import { stringifyError, findOnePlayer, loginWithPopup } from '../authService';
 

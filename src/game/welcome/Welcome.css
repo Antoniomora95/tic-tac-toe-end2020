@@ -1,0 +1,18 @@
+.grid-c{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 770px;
+}
+
+.d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.join {
+    background-color: coral;
+}
+.start-new {
+    background-color: darkseagreen;
+}
