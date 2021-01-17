@@ -1,5 +1,5 @@
 
-import { database } from '../../firebase/configuration';
+import { app, database } from '../../firebase/configuration';
 import { DB_REF_PLAYERS } from '../../common/constants.json'
 
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
@@ -19,6 +19,17 @@ export const findOnePlayer = async (uid) => {
         return snapshot.val();
     } catch (error) {
         throw error;
+    }
+}
+
+export const signOutPlayer = (updateAuthContext, history) => {
+    return async () => {
+        try {
+            await app.auth().signOut();
+            updateAuthContext({})
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

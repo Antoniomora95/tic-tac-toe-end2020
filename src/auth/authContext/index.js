@@ -1,22 +1,20 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 
 export const AuthContext = React.createContext({
-    currentUser: false,
-    setCurrentUser: () => {}
-  });
+    currentUser: {},
+    updateAuthContext: () => { }
+});
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
 
-const [currentUser, setCurrentUser] = useState();
+    const [currentUser, setCurrentUser] = useState();
 
-const initState = {
-    currentUser,
-    setCurrentUser
-  } 
-// i send the current value ++ the function to update the value (example once the user logged in or signup)
-    return(
-        <AuthContext.Provider value = { initState }>
-                {children}
+    const updateAuthContext = (user) => setCurrentUser(user);
+
+    // i send the current value ++ the function to update the value (example once the user logged in or signup)
+    return (
+        <AuthContext.Provider value={{currentUser, updateAuthContext}}>
+            {children}
         </AuthContext.Provider>
     );
 };

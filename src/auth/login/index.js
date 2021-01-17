@@ -1,26 +1,20 @@
 import React, {useCallback, useContext} from 'react';
 import { app, provider } from '../../firebase/configuration';
 import { AuthContext } from '../authContext';
-import {findOnePlayer, stringifyError} from './signinService';
+import { stringifyError, findOnePlayer } from '../authService';
 
 export const Login = ( { history } ) => {
-    const { setCurrentUser } = useContext(AuthContext);
+    const { updateAuthContext } = useContext(AuthContext);
 
     const callback = useCallback(async () => {
             try {
-                let result = await app.auth().signInWithPopup(provider)
-                var {  user } = result;
-                //var { idToken } = credential;
-                //extract the info from user
+                let { user } = await app.auth().signInWithPopup(provider);
                 let { uid } = user;
-                // check if the user is already in db
                 let userDB = await findOnePlayer(uid);
                 if(!userDB){
-                    //redirect to register flow
                     history.push("/signup");
                 } else {
-                    // i should set the context here
-                    setCurrentUser(userDB);
+                    updateAuthContext(userDB);
                     history.push("/")
                 }
             } catch (error) {
@@ -33,7 +27,7 @@ export const Login = ( { history } ) => {
     return (
         <div>
             <button onClick= {callback}>
-                Login
+                Login with google
             </button>
         </div>
     )
