@@ -12,7 +12,9 @@
 }
 .join {
     background-color: coral;
+    cursor: pointer;
 }
 .start-new {
     background-color: darkseagreen;
+    cursor: pointer;
 }

@@ -3,7 +3,6 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Login } from './auth/login';
 import { SignUp } from './auth/signup'
-import { Board } from './game/board/Board';
 import { Welcome } from './game/welcome/index';
 import { AuthProvider } from './auth/authContext';
 import { AuthGuardRoute } from './auth/guard/index';

@@ -1,6 +1,6 @@
 
-import { app, database, provider } from '../../firebase/configuration';
-import { DB_REF_PLAYERS } from '../../common/constants.json'
+import { app, database, provider } from '../firebase/configuration';
+import { DB_REF_PLAYERS } from '../common/constants.json'
 
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {

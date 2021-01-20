@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../auth/authContext';
-import { signOutPlayer } from '../auth/authService';
+import { signOutPlayer } from '../services/authService';
 export const Header = ({ history }) => {
     console.log('Header is running ---');
     const { currentUser, updateAuthContext } = useContext(AuthContext);
