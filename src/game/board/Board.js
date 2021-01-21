@@ -51,6 +51,7 @@ const HistoryItem = ({ index, onClickFn }) => {
 }
 const MovementOrWinnerView = ({ boardActualGame, isPlayingX }) => {
     const calculated = calculateWinner(boardActualGame);
+    
     if (boardActualGame && boardActualGame.length && calculated) {
         return <h4>The winner is {calculated}</h4>
     }

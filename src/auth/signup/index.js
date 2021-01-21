@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { Player } from '../../common/Player';
 import { AuthContext } from '../authContext';
 import {  loginWithPopup, signupPlayer, stringifyError } from '../../services/authService';
+import { Player } from '../../common/Classes';
 
 export const SignUp = ({history}) => {
     const { updateAuthContext } = useContext(AuthContext);
