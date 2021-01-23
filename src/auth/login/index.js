@@ -25,8 +25,8 @@ export const Login = ( { history } ) => {
         }
     
     return (
-        <div>
-            <button onClick= {callback}>
+        <div className="container is-flex is-justify-content-center mt-5">
+            <button className="button is-info has-text-white" onClick= {callback}>
                 Login with google
             </button>
         </div>

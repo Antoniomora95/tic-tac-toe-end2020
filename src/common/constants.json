@@ -1,5 +1,5 @@
 {
     "DB_REF_PLAYERS": "players",
     "DB_REF_GAME": "games",
-    "DB_REF_ACTIVE_PLAYERS": "active_players"
+    "DB_REF_PLAYERS_PROP_IS_ONLINE":"isOnline"
 }

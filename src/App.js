@@ -1,5 +1,6 @@
 
 import './App.css';
+import 'bulma/css/bulma.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Login } from './auth/login';
 import { SignUp } from './auth/signup'

@@ -1,3 +1,4 @@
+@import "bul"
 .App {
   color: white;
   text-align: center;
@@ -6,7 +7,6 @@
 }
 
 .App-header {
-  background-color: teal;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -20,9 +20,11 @@ export const SignUp = ({history}) => {
     }
     return (
         <div>
-            <button onClick={callback}>
-                Signup
+            <div className="container is-flex is-justify-content-center mt-5">
+            <button className="button is-danger" onClick= {callback}>
+                Signup with google
             </button>
+        </div>
         </div>
     )
 }

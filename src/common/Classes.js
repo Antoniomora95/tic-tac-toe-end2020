@@ -5,6 +5,7 @@ export class Player{
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
+        this.isOnline = false;
     }
     
 }
