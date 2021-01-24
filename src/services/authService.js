@@ -1,6 +1,6 @@
 
 import { app, database, provider } from '../firebase/configuration';
-import { DB_REF_PLAYERS } from '../common/constants.json'
+import { DB_REF_PLAYERS, DB_REF_PLAYERS_PROP_IS_ONLINE } from '../common/constants.json'
 
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {
@@ -14,13 +14,19 @@ export const signupPlayer = async (player) => {
 }
 export const loginWithPopup = async() => {
     try {
-        let { user }  = await app.auth().signInWithPopup(provider);
-        return user;
+        let { user: firebasePlayer }  = await app.auth().signInWithPopup(provider);
+        return firebasePlayer;
     } catch (error) {
         throw error;
     }
 }
-
+export const setPlayerOnline = async(uid) => {
+    try {
+        return await database.ref(`${DB_REF_PLAYERS}/${uid}`).child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(true);
+    } catch (error) {
+        throw error;
+    }
+}
 export const findOnePlayer = async (uid) => {
     try {
         let snapshot = await database.ref(`${DB_REF_PLAYERS}/${uid}`).get();
@@ -30,11 +36,12 @@ export const findOnePlayer = async (uid) => {
     }
 }
 
-export const signOutPlayer = (updateAuthContext) => {
+export const signOutPlayer = (updateAuthContext, uid) => {
     return async () => {
         try {
             await app.auth().signOut();
-            updateAuthContext({})
+            await database.ref(`${DB_REF_PLAYERS}/${uid}`).child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(false);
+            updateAuthContext({});
         } catch (error) {
             throw error;
         }

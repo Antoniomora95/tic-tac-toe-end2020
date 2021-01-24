@@ -1,6 +1,6 @@
 import React, { useContext} from 'react';
 import { AuthContext } from '../authContext';
-import { stringifyError, findOnePlayer, loginWithPopup } from '../../services/authService';
+import { stringifyError, findOnePlayer, loginWithPopup, setPlayerOnline } from '../../services/authService';
 import { Player } from '../../common/Classes';
 
 export const Login = ( { history } ) => {
@@ -8,14 +8,16 @@ export const Login = ( { history } ) => {
 
     const callback = async () => {
             try {
-                let user = await loginWithPopup();
-                let { uid } = user;
-                let userDB = await findOnePlayer(uid);
+                let firebasePlayer = await loginWithPopup();
+                let { uid: uidFirebase } = firebasePlayer;
+                let userDB = await findOnePlayer(uidFirebase);
                 if(!userDB){
                     history.push("/signup");
                 } else {
-                    let {uid, name, email, imageUrl} = userDB;
-                    let player = new Player(uid, name, email, imageUrl);
+                    // the player exist therefore --> set player online
+                    await setPlayerOnline(uidFirebase);
+                    let { uid, name, email, imageUrl } = userDB;
+                    let player = new Player(uid, name, email, imageUrl, true);
                     updateAuthContext(player);
                     history.push("/")
                 }

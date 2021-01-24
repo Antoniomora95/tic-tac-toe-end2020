@@ -1,11 +1,11 @@
 export class Player{
 
-    constructor(uid, name, email, imageUrl){
+    constructor(uid, name, email, imageUrl, isOnline = false){
         this.uid = uid;
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
-        this.isOnline = false;
+        this.isOnline = isOnline;
     }
     
 }

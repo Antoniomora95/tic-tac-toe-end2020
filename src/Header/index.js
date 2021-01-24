@@ -7,7 +7,7 @@ export const Header = ({ history }) => {
     return (
         <header className='App-header has-background-primary has-text-white'>
         Tic tac toe
-        { currentUser && currentUser.uid &&  <> <button onClick = { signOutPlayer(updateAuthContext) }>Sign Out</button>
+        { currentUser && currentUser.uid &&  <> <button onClick = { signOutPlayer(updateAuthContext, currentUser.uid ) }>Sign Out</button>
         <img className='profile-pic' src={currentUser.imageUrl} alt={'d'}></img>
         <p style={{fontSize:'14px', paddingLeft:'10px'}}>{currentUser.name}</p>
         </> 
