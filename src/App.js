@@ -18,6 +18,7 @@ function App() {
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />
             <AuthGuardRoute exact path="/" component={Welcome}/>
+            <Route exact path="/*" component={SignUp} />
           </Switch>
         </Router>
       </AuthProvider>
