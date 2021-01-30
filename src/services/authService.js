@@ -1,7 +1,6 @@
 
 import { app, provider, playersRef } from '../firebase/configuration';
 import { DB_REF_PLAYERS_PROP_IS_ONLINE } from '../common/constants.json'
-import { unsubscribeForChanges } from './gameService';
 
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {
