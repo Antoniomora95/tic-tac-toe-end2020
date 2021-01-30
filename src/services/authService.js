@@ -1,12 +1,13 @@
 
-import { app, database, provider } from '../firebase/configuration';
-import { DB_REF_PLAYERS, DB_REF_PLAYERS_PROP_IS_ONLINE } from '../common/constants.json'
+import { app, provider, playersRef } from '../firebase/configuration';
+import { DB_REF_PLAYERS_PROP_IS_ONLINE } from '../common/constants.json'
+import { unsubscribeForChanges } from './gameService';
 
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {
     try {
         let {uid} = player;
-        await database.ref(`${DB_REF_PLAYERS}/${uid}`).set(player);
+        await playersRef.child(uid).set(player);
         return true;
     } catch (error) {
         throw error;
@@ -22,14 +23,16 @@ export const loginWithPopup = async() => {
 }
 export const setPlayerOnline = async(uid) => {
     try {
-        return await database.ref(`${DB_REF_PLAYERS}/${uid}`).child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(true);
+        let playerReference = playersRef.child(uid);
+        return await  playerReference.child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(true);
     } catch (error) {
         throw error;
     }
 }
 export const findOnePlayer = async (uid) => {
     try {
-        let snapshot = await database.ref(`${DB_REF_PLAYERS}/${uid}`).get();
+        let playerReference = playersRef.child(uid);
+        let snapshot = await playerReference.get();
         return snapshot.val();
     } catch (error) {
         throw error;
@@ -40,7 +43,8 @@ export const signOutPlayer = (updateAuthContext, uid) => {
     return async () => {
         try {
             await app.auth().signOut();
-            await database.ref(`${DB_REF_PLAYERS}/${uid}`).child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(false);
+            let playerReference = playersRef.child(uid);
+            await playerReference.child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(false);
             updateAuthContext({});
         } catch (error) {
             throw error;

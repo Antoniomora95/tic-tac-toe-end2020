@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import {DB_REF_PLAYERS, DB_REF_GAME} from '../common/constants.json';
 
 const app = firebase.initializeApp({
     databaseURL: process.env.REACT_APP_DATABASE,
@@ -19,8 +20,9 @@ provider.addScope('email');
 
 const database = app.database();
 
-
+const playersRef = database.ref(`${DB_REF_PLAYERS}`);
+const gamesRef = database.ref(`${DB_REF_GAME}`);
 
 export  {
-    provider, app, database
+    provider, app, database, playersRef, gamesRef
 }

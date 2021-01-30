@@ -31,6 +31,8 @@ export const Welcome = () => {
             }
         })()
         return () => {
+            console.log('unmounted');
+            // when commented you will see how react tries to update the state, but that reference no longer exist since the component was unmounted
             unsubscribeForChanges();
             isMounted = false;
         }
