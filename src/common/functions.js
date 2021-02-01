@@ -1,0 +1,1 @@
+export let userLoggedIn = (currentUser) => currentUser && currentUser.uid

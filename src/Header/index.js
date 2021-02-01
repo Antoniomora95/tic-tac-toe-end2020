@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { TitleH3 } from '../components/TitleH3';
 import { AuthContext } from '../auth/authContext';
 import { AuthUserCard } from '../components/AuthUser/index';
-
-let userLoggedIn = (currentUser) => currentUser && currentUser.uid
+import { userLoggedIn } from '../common/functions';
 
 export const Header = () => {
   const { currentUser, updateAuthContext } = useContext(AuthContext);

@@ -1,28 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
-//import { AuthContext } from '../../auth/authContext';
-import { subscribeForChanges, unsubscribeForChanges, getPlayersOnline } from '../../services/gameService';
+import { AuthContext } from '../../auth/authContext';
+import { subscribeForChanges, unsubscribeForChanges, getPlayersOnline, handleStartGame } from '../../services/gameService';
 import './Welcome.css';
+import { userLoggedIn } from '../../common/functions';
 
-
-// is mobile in columns allow you to keep the columns in small sizes
-const PlayerOnline = ({ player }) => {
-    return <li> 
-        <div className='columns is-mobile'>
-            <div className='column  is-4-desktop is-7-mobile has-text-centered-mobile overflow-hidden'>
-                {player.name} 
-            </div>
-            <div className='column  is-6-desktop is-hidden-mobile  overflow-hidden'>
-                {player.email}
-            </div>
-            <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7'>
-                    Start game
-                </button>
-            </div>
-        </div>
-    </li>
-}
 const renderPlayerOnline = (player) => {
     return (
         <PlayerOnline
@@ -31,8 +13,25 @@ const renderPlayerOnline = (player) => {
         />
     )
 }
+const gameNotAllowed = (authPlayer, player) => userLoggedIn(authPlayer) && authPlayer.uid === player.uid
+// is mobile in columns allow you to keep the columns in small sizes
+const PlayerOnline = ({ player }) => {
+    const { currentUser: authPlayer } = useContext(AuthContext);
+    return <li> 
+        <div className='columns is-mobile'>
+            <div className='column  is-4-desktop is-7-mobile has-text-centered-mobile overflow-hidden'>
+                {player.name} 
+            </div>
+            <div className='column is-6-desktop is-hidden-mobile  overflow-hidden'>
+                {player.email}
+            </div>
+            <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
+                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) } onClick={ ()=> handleStartGame(player)}> Start game </button> 
+            </div>
+        </div>
+    </li>
+}
 export const Welcome = () => {
-    //const { currentUser: authPlayer } = useContext(AuthContext);
     const [players, setPlayers] = useState([]);
     //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
