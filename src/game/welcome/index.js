@@ -3,36 +3,36 @@ import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
 import { subscribeForChanges, unsubscribeForChanges, getPlayersOnline, handleStartGame } from '../../services/gameService';
 import './Welcome.css';
-import { userLoggedIn } from '../../common/functions';
+import { gameNotAllowed, isPlaying, userLoggedIn } from '../../common/functions';
 
-const renderPlayerOnline = (player) => {
-    return (
-        <PlayerOnline
-            key={player.uid}
-            player={player}
-        />
-    )
-}
-const gameNotAllowed = (authPlayer, player) => userLoggedIn(authPlayer) && authPlayer.uid === player.uid
 // is mobile in columns allow you to keep the columns in small sizes
-const PlayerOnline = ({ player }) => {
-    const { currentUser: authPlayer } = useContext(AuthContext);
-    return <li> 
+const PlayerOnline = ({ authPlayer, player }) => {
+    return <li>
         <div className='columns is-mobile'>
             <div className='column  is-4-desktop is-7-mobile has-text-centered-mobile overflow-hidden'>
-                {player.name} 
+                {player.name}
             </div>
             <div className='column is-6-desktop is-hidden-mobile  overflow-hidden'>
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) } onClick={ ()=> handleStartGame(player)}> Start game </button> 
+                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) } onClick={() => handleStartGame(player) }> { isPlaying(player) ? `Is playing`: `Start game`}  </button>
             </div>
         </div>
     </li>
 }
+const renderPlayerOnline = (player, authPlayer) => {
+    return (
+        <PlayerOnline
+            key={player.uid}
+            authPlayer = {authPlayer}
+            player={player}
+        />
+    )
+}
 export const Welcome = () => {
     const [players, setPlayers] = useState([]);
+    const { currentUser: authPlayer } = useContext(AuthContext);
     //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         let isMounted = true;
@@ -53,16 +53,21 @@ export const Welcome = () => {
             isMounted = false;
         }
     }, [])
+    console.log('welcome re rendered');
     return (
         <div className='container'>
-            <div className='content'>
-                <TitleH3 style={{paddingTop: 15}}>Users online</TitleH3>
-                <ol>
-                    {
-                        players && players.length && players.map((player) => renderPlayerOnline(player))
-                    }
-                </ol>
-            </div>
+            {
+                userLoggedIn(authPlayer) ? <>
+                    <div className='content'>
+                        <TitleH3 style={{ paddingTop: 15 }}>Users online</TitleH3>
+                        <ol>
+                            {
+                                players && players.length && players.map((player) => renderPlayerOnline(player, authPlayer))
+                            }
+                        </ol>
+                    </div> </> : <>...</>
+
+            }
         </div>
     )
 }

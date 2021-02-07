@@ -1,11 +1,12 @@
 export class Player{
 
-    constructor(uid, name, email, imageUrl, isOnline = false){
+    constructor(uid, name, email, imageUrl, isOnline = false, isPlaying = false){
         this.uid = uid;
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
         this.isOnline = isOnline;
+        this.isPlaying = isPlaying;
     }
     
 }

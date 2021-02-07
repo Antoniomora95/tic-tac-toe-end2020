@@ -1,4 +1,4 @@
-import { CatGame } from "../common/Classes";
+import { CatGame, Player } from "../common/Classes";
 import { DB_REF_PLAYERS_PROP_IS_ONLINE } from '../common/constants.json';
 import { playersRef, gamesRef } from "../firebase/configuration";
 import { stringifyError } from "./authService";
@@ -48,8 +48,10 @@ function transformToArray(playersObject) {
     console.log(playersObject, 'player obj');
     let players = [];
     Object.keys(playersObject).forEach((key) => {
-        let player = playersObject[key]
-        players.push(player);
+        let player = playersObject[key];
+        console.log(player);
+        let { uid, name, email, imageUrl, isOnline, isPlaying } = player;
+        players.push(new Player(uid, name, email, imageUrl, isOnline, isPlaying));
     }); 
     return players;
 }
