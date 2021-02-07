@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
-import { subscribeForChanges, unsubscribeForChanges, getPlayersOnline, handleStartGame } from '../../services/gameService';
+import { subscribeForChanges, unsubscribeForChanges, getPlayersOnline, handleStartGame, subscribeForChildAdded } from '../../services/gameService';
 import './Welcome.css';
 import { gameNotAllowed, isPlaying, userLoggedIn } from '../../common/functions';
 
@@ -41,6 +41,7 @@ export const Welcome = () => {
                 if (isMounted) {
                     getPlayersOnline(setPlayers);
                     subscribeForChanges(setPlayers);
+                    subscribeForChildAdded(setPlayers);
                 }
             } catch (error) {
                 console.log(error);

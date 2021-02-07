@@ -36,6 +36,10 @@ export const subscribeForChanges = (setPlayers) => playersRef.on('child_changed'
     console.log('there is child_changed is online is false');
     getPlayersOnline(setPlayers);
 });
+export const subscribeForChildAdded = (setPlayers) => playersRef.on('child_added', (childSnapshot, prevChildKey) => {
+    console.log('there is child added');
+    getPlayersOnline(setPlayers);
+});
  
 
 export const unsubscribeForChanges = () => {

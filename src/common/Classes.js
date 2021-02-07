@@ -1,5 +1,6 @@
-export class Player{
-
+import  { DB_REF_GAME_AVAILABLE_STATUSES } from './constants.json';
+const { IS_NEW } = DB_REF_GAME_AVAILABLE_STATUSES;
+ export class Player{
     constructor(uid, name, email, imageUrl, isOnline = false, isPlaying = false){
         this.uid = uid;
         this.name = name;
@@ -17,8 +18,10 @@ export class CatGame {
         this.uid = uid;
         this.player1 =  player1Uid;
         this.player2 = '';
+        this.nowPlaying = player1Uid;
+        this.winner = '' ;
         this.board = this.fillInitialArray(9);
-        this.winnerPlayer = false
+        this.status = IS_NEW;
     }
 
     fillInitialArray(length_) {
