@@ -18,8 +18,8 @@ export const getPlayersOnline = async (setPlayers) => {
 export const toogleIsPlaying = async(uid, isPlaying) => {
     try {
         let playerReference = playersRef.child(uid);
-        let res = await  playerReference.child(DB_REF_PLAYERS_PROP_IS_PLAYING).set(isPlaying);
-        console.log(res);
+        await  playerReference.child(DB_REF_PLAYERS_PROP_IS_PLAYING).set(isPlaying);
+        return true;
     } catch (error) {
         console.log(stringifyError(error));
     }

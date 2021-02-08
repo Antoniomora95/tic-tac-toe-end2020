@@ -14,10 +14,10 @@ const { IS_NEW } = DB_REF_GAME_AVAILABLE_STATUSES;
 
 // player 1 always will have the X position in the game
 export class CatGame {
-    constructor(uid, player1Uid){
+    constructor(uid, player1Uid, player2Uid){
         this.uid = uid;
         this.player1 =  player1Uid;
-        this.player2 = '';
+        this.player2 = player2Uid;
         this.nowPlaying = player1Uid;
         this.winner = '' ;
         this.board = this.fillInitialArray(9);
