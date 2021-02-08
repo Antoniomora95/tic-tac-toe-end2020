@@ -9,5 +9,6 @@
         "PAUSED": "paused",
         "FINISHED": "finished"
     },
-    "DB_REF_PLAYERS_PROP_IS_ONLINE":"isOnline"
+    "DB_REF_PLAYERS_PROP_IS_ONLINE":"isOnline",
+    "DB_REF_PLAYERS_PROP_IS_PLAYING":"isPlaying"
 }

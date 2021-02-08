@@ -6,6 +6,13 @@ const isPlaying = (player) =>  {
     return player && player.isPlaying;
 }
 
+const stringifyError = error => {
+    if(error instanceof Error) {
+        return error.toString();
+    } else {
+        return JSON.stringify(error);
+    }
+}
 export {
-    userLoggedIn, gameNotAllowed, isPlaying
+    userLoggedIn, gameNotAllowed, isPlaying, stringifyError
 }

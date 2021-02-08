@@ -22,6 +22,7 @@ export class CatGame {
         this.winner = '' ;
         this.board = this.fillInitialArray(9);
         this.status = IS_NEW;
+        this.createdAt = new Date().toLocaleString();
     }
 
     fillInitialArray(length_) {

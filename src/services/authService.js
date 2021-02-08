@@ -50,11 +50,3 @@ export const signOutPlayer = (updateAuthContext, uid) => {
         }
     }
 }
-
-export const stringifyError = error => {
-    if(error instanceof Error) {
-        return error.toString();
-    } else {
-        return JSON.stringify(error);
-    }
-}

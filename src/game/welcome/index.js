@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
-import { subscribeForChanges, unsubscribeForChanges, getPlayersOnline, handleStartGame, subscribeForChildAdded } from '../../services/gameService';
+import {  handleStartGame } from '../../services/gameService';
 import './Welcome.css';
 import { gameNotAllowed, isPlaying, userLoggedIn } from '../../common/functions';
+import { getPlayersOnline, subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
 
 // is mobile in columns allow you to keep the columns in small sizes
 const PlayerOnline = ({ authPlayer, player }) => {
@@ -16,7 +17,7 @@ const PlayerOnline = ({ authPlayer, player }) => {
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) } onClick={() => handleStartGame(player) }> { isPlaying(player) ? `Is playing`: `Start game`}  </button>
+                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) } onClick={() => handleStartGame(authPlayer) }> { isPlaying(player) ? `Is playing`: `Start game`}  </button>
             </div>
         </div>
     </li>
