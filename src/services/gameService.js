@@ -1,7 +1,8 @@
 import { CatGame } from "../common/Classes";
-import { stringifyError } from "../common/functions";
+import { stringifyError, userLoggedIn } from "../common/functions";
 import { gamesRef } from "../firebase/configuration";
 import { toogleIsPlaying } from "./playerService";
+import  { DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
 
 const handleStartGame = async (authPlayer, challengedPlayer) => {
     try {
@@ -20,27 +21,25 @@ const handleStartGame = async (authPlayer, challengedPlayer) => {
     }
 }
 
-const subscribeForChallenges = (setPlayers) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
-    // I'm listening for new games, but need to filter only the ones where I'm the second player (challenges to me)
-    console.log(childSnapshot.val(), prevChildKey, 'I´m listening for challenges');
-    //getPlayersOnline(setPlayers);
+const subscribeForChallenges = ( authPlayer ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+    console.log(authPlayer, 'auth player now');
+    // only new games and if this for me authPlayer
+    let game = childSnapshot.val();
+    if(game && isNewGame(game) && userLoggedIn(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
+        alert('time to play')
+    }
 });
 
 const unsubscribeForChallenges = (setPlayers) => {
     gamesRef.off();
 }
-
-/*const getNewChallenges = async (setPlayers) => {
-    try {
-        // when you do not understand something select the method orderByChild --> and open the definiton on internet
-        let dataSnapshot = await playersRef.orderByChild(DB_REF_PLAYERS_PROP_IS_ONLINE).equalTo(true).once('value');
-        let players = dataSnapshot && dataSnapshot.val() ? dataSnapshot.val() : {};
-        
-        setPlayers(transformToArray(players));
-    } catch (error) {
-        console.log(stringifyError(error));
-    }
-}*/
+function isNewGame(game) {
+    return game.status && game.status === DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW
+}
+function isChallengeForAuthPlayer(game, authPlayer) {
+    debugger
+    return game && game.player2 && game.player2 === authPlayer.uid;
+}
 
 export {
     handleStartGame, subscribeForChallenges, unsubscribeForChallenges

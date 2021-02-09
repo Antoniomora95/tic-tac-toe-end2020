@@ -26,23 +26,19 @@ export const toogleIsPlaying = async(uid, isPlaying) => {
 }
 
 export const subscribeForChanges = (setPlayers) => playersRef.on('child_changed', (childSnapshot, prevChildKey) => {
-    console.log('there is child_changed is online is false');
     getPlayersOnline(setPlayers);
 });
 export const subscribeForChildAdded = (setPlayers) => playersRef.on('child_added', (childSnapshot, prevChildKey) => {
-    console.log('there is child added');
     getPlayersOnline(setPlayers);
 });
  
 
 export const unsubscribeForChanges = () => {
-    console.log('changes are killed, since it was unmounted');
     playersRef.off();
 }
  
 
 function transformToArray(object) {
-    console.log(object, 'object to transform');
     let players = [];
     Object.keys(object).forEach((key) => {
         let player = object[key];

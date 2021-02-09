@@ -41,10 +41,11 @@ export const Welcome = () => {
         (async () => {
             try {
                 if (isMounted) {
-                    getPlayersOnline(setPlayers);
+                    // if a property changes
                     subscribeForChanges(setPlayers);
+                    // it runs once for each element in the table/collection
                     subscribeForChildAdded(setPlayers);
-                    subscribeForChallenges();
+                    subscribeForChallenges(authPlayer);
                 }
             } catch (error) {
                 console.log(error);

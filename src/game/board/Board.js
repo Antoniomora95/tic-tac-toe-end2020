@@ -82,7 +82,6 @@ export class Board extends Component {
         return arr;
     }
     handleClick(index) {
-        console.log('click');
         let { isPlayingX, boardActualGame, historyGame } = this.state;
         if (!calculateWinner(boardActualGame)) {
             let cloneActualGame = JSON.parse(JSON.stringify(boardActualGame));
