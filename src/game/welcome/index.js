@@ -6,6 +6,7 @@ import './Welcome.css';
 import { gameNotAllowed, isPlaying, userLoggedIn } from '../../common/functions';
 import { getPlayersOnline, subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
 import { subscribeForChallenges, unsubscribeForChallenges } from '../../services/gameService';
+import { ModalStartGame } from '../../components/ModalStartGame';
 
 // is mobile in columns allow you to keep the columns in small sizes
 const PlayerOnline = ({ authPlayer, player }) => {
@@ -35,6 +36,7 @@ const renderPlayerOnline = (player, authPlayer) => {
 export const Welcome = () => {
     const [players, setPlayers] = useState([]);
     const { currentUser: authPlayer } = useContext(AuthContext);
+    const { name } = authPlayer;
     //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         let isMounted = true;
@@ -72,8 +74,8 @@ export const Welcome = () => {
                             }
                         </ol>
                     </div> </> : <>...</>
-
             }
+            <ModalStartGame isOpen = {true} name={name}/>
         </div>
     )
 }
