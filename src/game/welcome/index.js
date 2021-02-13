@@ -4,7 +4,7 @@ import { AuthContext } from '../../auth/authContext';
 import {  handleStartGame } from '../../services/gameService';
 import './Welcome.css';
 import { gameNotAllowed, isPlaying, userLoggedIn } from '../../common/functions';
-import { getPlayersOnline, subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
+import { subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
 import { subscribeForChallenges, unsubscribeForChallenges } from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
 
@@ -34,8 +34,11 @@ const renderPlayerOnline = (player, authPlayer) => {
     )
 }
 export const Welcome = () => {
-    const [players, setPlayers] = useState([]);
+    // useReducer, not sure if it is better and block the view when click on players
     const { currentUser: authPlayer } = useContext(AuthContext);
+    const [players, setPlayers] = useState([]);
+    const [challenge, setChallenge] = useState({});
+    const  [modalOpen, setModalOpen] = useState(false);
     const { name } = authPlayer;
     //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -47,7 +50,8 @@ export const Welcome = () => {
                     subscribeForChanges(setPlayers);
                     // it runs once for each element in the table/collection
                     subscribeForChildAdded(setPlayers);
-                    subscribeForChallenges(authPlayer);
+                    // new game challenge for me
+                    subscribeForChallenges(authPlayer, setChallenge, setModalOpen);
                 }
             } catch (error) {
                 console.log(error);
@@ -75,7 +79,7 @@ export const Welcome = () => {
                         </ol>
                     </div> </> : <>...</>
             }
-            <ModalStartGame isOpen = {true} name={name}/>
+            <ModalStartGame modalOpen = { modalOpen } nameAuthPlayer={ name } challenge = { challenge }/>
         </div>
     )
 }

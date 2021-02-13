@@ -22,12 +22,14 @@ const handleStartGame = async (authPlayer, challengedPlayer) => {
     }
 }
 
-const subscribeForChallenges = ( authPlayer ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+const subscribeForChallenges = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     console.log(childSnapshot, 'auth player now');
     // only new games and if this for me authPlayer
     let game = childSnapshot.val();
     if(game && isNewGame(game) && userLoggedIn(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
-        
+        debugger
+        setChallenge(game);
+        setModalOpen(true);
     }
 });
 
