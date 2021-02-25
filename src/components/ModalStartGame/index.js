@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
+  console.log(challenge);
   // i could get more data about the game
 
   return (

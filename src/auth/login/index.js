@@ -20,6 +20,7 @@ export const Login = ({ history }) => {
                     // if it was offline then it can access
                     await setPlayerOnline(uidFirebase);
                     let player = new Player(uid, name, email, imageUrl, true);
+                    
                     updateAuthContext(player);
                     history.push("/");
                 } else {
