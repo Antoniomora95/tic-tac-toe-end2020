@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useReducer } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
 import {  handleStartGame } from '../../services/gameService';
@@ -19,7 +19,7 @@ const PlayerOnline = ({ authPlayer, player }) => {
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) } onClick={() => handleStartGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: `Start game`}  </button>
+                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) } onClick={ () => handleStartGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: `Start game` }  </button>
             </div>
         </div>
     </li>
@@ -35,10 +35,17 @@ const renderPlayerOnline = (player, authPlayer) => {
 }
 export const Welcome = () => {
     // useReducer, not sure if it is better and block the view when click on players
+    //Çconst [state, dispatch] = useReducer(reducer, initialState, init);
+
+
     const { currentUser: authPlayer } = useContext(AuthContext);
     const [players, setPlayers] = useState([]);
     const [challenge, setChallenge] = useState({});
     const  [modalOpen, setModalOpen] = useState(false);
+
+
+
+
     const { name } = authPlayer;
     //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -79,7 +86,7 @@ export const Welcome = () => {
                         </ol>
                     </div> </> : <>...</>
             }
-            <ModalStartGame modalOpen = { modalOpen } nameAuthPlayer={ name } challenge = { challenge }/>
+           {modalOpen && <ModalStartGame modalOpen = { modalOpen } nameAuthPlayer={ name } challenge = { challenge }/> }
         </div>
     )
 }
