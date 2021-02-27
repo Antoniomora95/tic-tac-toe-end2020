@@ -1,11 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
-import { DB_REF_PLAYERS, DB_REF_GAME } from '../common/constants.json';
-
-const defaultScopes = ['profile', 'email'];
-const defaultParameters = { promt: 'select_account' }
-const defaultRefs = [DB_REF_PLAYERS, DB_REF_GAME];
+import {DB_REF_PLAYERS, DB_REF_GAME} from '../common/constants.json';
 
 const firebaseConfig = {
     databaseURL: process.env.REACT_APP_DATABASE,
@@ -14,54 +10,21 @@ const firebaseConfig = {
     projectId: process.env.REACT_APP_PROJECT_ID,
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_APP_ID
-}
-class FirebaseManager {
+    appId: process.env.REACT_APP_APP_ID 
+};
+const app = firebase.apps && firebase.apps.length > 0 ? firebase.apps[0] : firebase.initializeApp(firebaseConfig)
 
-    constructor(providerScopes = defaultScopes, providerParameters = defaultParameters, databaseRefs = defaultRefs) {
-        debugger
-        this.app = this.initializeApp();
-        this.database = this.app.database();
-        this.databaseReferences = this.initializeRefs(databaseRefs);
-        this.provider = this.initializeProvider();
-        this.addProviderScopes(providerScopes);
-        this.setProviderParameters(providerParameters)
-    }
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.addScope('profile');
+provider.addScope('email');
 
-    initializeApp = () => {
-        // check if the app is already initialized
-        return firebase.apps && firebase.apps.length > 0 ? firebase.apps[0] : firebase.initializeApp(firebaseConfig);
-    }
+console.log(provider, 'deas');
+const database = app.database();
 
-    initializeProvider = () => {
-        return new firebase.auth.GoogleAuthProvider();
-    }
+const playersRef = database.ref(`${DB_REF_PLAYERS}`);
+const gamesRef = database.ref(`${DB_REF_GAME}`);
 
-    addProviderScopes = (scopes) => {
-        if (scopes && Array.isArray(scopes)) {
-            scopes.forEach(scope => {
-                this.provider.addScope(scope);
-            })
-        }
-    }
-
-    setProviderParameters = (parameters) => {
-        this.provider.setCustomParameters(parameters);
-    }
-
-    initializeRefs = (databaseRefs) => {
-        let references = {};
-        databaseRefs.forEach(ref => {
-            references[`${ref}Ref`] = this.database.ref(ref)
-        });
-        return references;
-    }
-    createDatabaseReference = (reference) => {
-        return this.database.ref(reference)
-    }
+export  {
+    provider, app, database, playersRef, gamesRef
 }
 
-let firebaseManager = new FirebaseManager();
-
-console.log('really', firebaseManager, 'sdsd');
-export const { app, database, databaseReferences, provider } = firebaseManager 
