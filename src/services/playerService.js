@@ -2,7 +2,9 @@
 import { Player } from "../common/Classes";
 import { DB_REF_PLAYERS_PROP_IS_ONLINE, DB_REF_PLAYERS_PROP_IS_PLAYING } from '../common/constants.json';
 import { stringifyError } from "../common/functions";
-import { playersRef } from "../firebase/configuration";
+import { databaseReferences } from "../firebase/configuration";
+
+const { playersRef } = databaseReferences;
 
 export const getPlayersOnline = async (setPlayers) => {
     try {

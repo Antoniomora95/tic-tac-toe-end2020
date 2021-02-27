@@ -1,9 +1,10 @@
 import { CatGame } from "../common/Classes";
 import { stringifyError, userLoggedIn } from "../common/functions";
-import { gamesRef } from "../firebase/configuration";
+import {  databaseReferences } from "../firebase/configuration";
 import { toogleIsPlaying } from "./playerService";
 import  { DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
 
+const { gamesRef } = databaseReferences;
 
 const handleStartGame = async (authPlayer, challengedPlayer) => {
     try {
