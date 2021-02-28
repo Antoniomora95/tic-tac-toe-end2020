@@ -1,9 +1,13 @@
-let userLoggedIn = (currentUser) => currentUser && currentUser.uid
+let isValidUser = (currentUser) => currentUser && currentUser.uid
 
 const gameNotAllowed = (authPlayer, player) => authPlayer.uid === player.uid;
 
 const isPlaying = (player) =>  {
     return player && player.isPlaying;
+}
+const isExistentChallenge = (authPlayer, player) => {
+    console.log(authPlayer, player);
+    return (authPlayer && authPlayer.existentChallenge) || (player && player.existentChallenge)
 }
 
 const stringifyError = error => {
@@ -14,5 +18,5 @@ const stringifyError = error => {
     }
 }
 export {
-    userLoggedIn, gameNotAllowed, isPlaying, stringifyError
+    isValidUser, gameNotAllowed, isPlaying, isExistentChallenge, stringifyError
 }

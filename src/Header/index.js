@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { TitleH3 } from '../components/TitleH3';
 import { AuthContext } from '../auth/authContext';
 import { AuthUserCard } from '../components/AuthUser/index';
-import { userLoggedIn } from '../common/functions';
+import { isValidUser } from '../common/functions';
 
 export const Header = () => {
   const { currentUser, updateAuthContext } = useContext(AuthContext);
@@ -15,7 +15,7 @@ export const Header = () => {
         </div>
         <div className='column p-0 is-flex is-justify-content-center is-align-items-center'>
           {
-            userLoggedIn(currentUser) ? <AuthUserCard currentUser={currentUser} updateAuthContext={updateAuthContext} /> : <div className='is-size-6 has-text-white  has-text-weight-medium'>No logged user</div>
+            isValidUser(currentUser) ? <AuthUserCard currentUser={currentUser} updateAuthContext={updateAuthContext} /> : <div className='is-size-6 has-text-white  has-text-weight-medium'>No logged user</div>
           }
         </div>
       </div>

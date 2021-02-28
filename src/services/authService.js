@@ -1,7 +1,6 @@
 
 import { DB_REF_PLAYERS_PROP_IS_ONLINE } from '../common/constants.json'
-import { app, databaseReferences , provider }   from '../firebase/configuration'
-const { playersRef } = databaseReferences;
+import { provider, app, playersRef }   from '../firebase/configuration'
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {
     try {
@@ -42,13 +41,12 @@ export const signOutPlayer = (updateAuthContext, uid) => {
     return async () => { 
         try {
             let playerReference = playersRef.child(uid);
+            console.log(playerReference, 'player ref');
             await playerReference.child(DB_REF_PLAYERS_PROP_IS_ONLINE).set(false);
-            await app.auth().signOut();
-            console.log('dfdf');
             updateAuthContext({});
-            
+            await app.auth().signOut();  
         } catch (error) {
             throw error;
         }
-    }
+    } 
 }

@@ -15,12 +15,12 @@ export const Login = ({ history }) => {
             if (!userDB) {
                 history.push("/signup");
             } else {
-                let { uid, name, email, imageUrl, isOnline } = userDB;
+                let { uid, name, email, imageUrl, isOnline, isPlaying, existentChallenge } = userDB;
+                console.log(existentChallenge);
                 if (!isOnline) {
                     // if it was offline then it can access
                     await setPlayerOnline(uidFirebase);
-                    let player = new Player(uid, name, email, imageUrl, true);
-                    
+                    let player = new Player(uid, name, email, imageUrl, true, isPlaying,  existentChallenge);
                     updateAuthContext(player);
                     history.push("/");
                 } else {

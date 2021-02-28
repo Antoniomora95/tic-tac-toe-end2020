@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState, useReducer } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
 import {  handleStartGame } from '../../services/gameService';
 import './Welcome.css';
-import { gameNotAllowed, isPlaying, userLoggedIn } from '../../common/functions';
+import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser } from '../../common/functions';
 import { subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
-import { subscribeForChallenges, unsubscribeForChallenges } from '../../services/gameService';
+import {  unsubscribeForChallenges , subscribeForChallenges} from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
 
 // is mobile in columns allow you to keep the columns in small sizes
-const PlayerOnline = ({ authPlayer, player }) => {
+const PlayerOnline = ({ player, authPlayer }) => {
     return <li>
         <div className='columns is-mobile'>
             <div className='column  is-4-desktop is-7-mobile has-text-centered-mobile overflow-hidden'>
@@ -19,17 +19,18 @@ const PlayerOnline = ({ authPlayer, player }) => {
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) } onClick={ () => handleStartGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: `Start game` }  </button>
+                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player) } onClick={ () => handleStartGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: isExistentChallenge(authPlayer, player) ? `Not available` : `Start game` } {authPlayer.existentChallenge ? 'true': 'false'}  </button>
             </div>
         </div>
     </li>
 }
 const renderPlayerOnline = (player, authPlayer) => {
+    
     return (
         <PlayerOnline
             key={player.uid}
-            authPlayer = {authPlayer}
             player={player}
+            authPlayer = {authPlayer}
         />
     )
 }
@@ -43,9 +44,6 @@ export const Welcome = () => {
     const [challenge, setChallenge] = useState({});
     const  [modalOpen, setModalOpen] = useState(false);
 
-
-
-
     const { name } = authPlayer;
     //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -57,7 +55,7 @@ export const Welcome = () => {
                     subscribeForChanges(setPlayers);
                     // it runs once for each element in the table/collection
                     subscribeForChildAdded(setPlayers);
-                    // new game challenge for me
+                    // new game challenge for me 
                     subscribeForChallenges(authPlayer, setChallenge, setModalOpen);
                 }
             } catch (error) {
@@ -76,7 +74,7 @@ export const Welcome = () => {
     return (
         <div className='container'>
             {
-                userLoggedIn(authPlayer) ? <>
+                isValidUser(authPlayer) ? <>
                     <div className='content'>
                         <TitleH3 style={{ paddingTop: 15 }}>Users online</TitleH3>
                         <ol>
