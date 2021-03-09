@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { findOnePlayer } from '../../services/authService';
+import { handleAcceptChallenge, handleDeclineChallenge } from '../../services/gameService';
 
 export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
   const [creator, setCreator] = useState({})
@@ -29,11 +30,11 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
           <button className="delete" aria-label="close"></button>
         </header> 
         <section className="modal-card-body has-text-dark">
-          Hey <strong>{ nameAuthPlayer }</strong> would you like to accept the challenge from: <strong>{creator.name}</strong>
+          Hey <strong>{ nameAuthPlayer }</strong> would you like to accept the challenge from: <strong> {creator.name } </strong>
     </section> 
         <footer className="modal-card-foot is-flex is-justify-content-center">
-          <button className="button is-primary" onClick={}>Yes of course</button>
-          <button className="button is-danger" onClick={}>Nope</button>
+          <button className="button is-primary" onClick={ handleAcceptChallenge } >Yes of course</button>
+          <button className="button is-danger" onClick={ handleDeclineChallenge }>Nope</button>
         </footer>
       </div> 
     </div>

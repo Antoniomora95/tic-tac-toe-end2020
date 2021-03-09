@@ -6,22 +6,22 @@ import { findOnePlayer } from "./authService";
 import { CatGame } from "../common/Classes";
 
 
-const handleStartGame = async (authPlayer, challengedPlayer) => {
+const handleCreateGame = async (authPlayer, challengedPlayer) => {
     try {
         // create the game model and store it in DB
         console.log('block the view');
-        let { uid: player1Uid, existentChallenge: challengePlayer1 } = authPlayer;
-        let {uid: player2Uid, existentChallenge: challengePlayer2 } = challengedPlayer;
+        let { uid: authPlayerUid } = authPlayer;
+        let {uid: challengedPlayerUid } = challengedPlayer;
 
         // get both players
-        const [player1, player2 ] = await Promise.all([findOnePlayer(player1Uid), findOnePlayer(player2Uid)]);
+        const [player1, player2 ] = await Promise.all([findOnePlayer(authPlayerUid), findOnePlayer(challengedPlayerUid)]);
         if((isValidUser(player1)) && isValidUser(player2)){
-            if(!isExistentChallenge(player1) && !isExistentChallenge(player2)){
+            if(!isExistentChallenge(player1, player2)){
                 let gameUid = gamesRef.push().key;
-                let game = new CatGame(gameUid, player1Uid, player2Uid);
+                let game = new CatGame(gameUid, authPlayerUid, challengedPlayerUid);
                 let gameReference = gamesRef.child(gameUid);
                 let gameSet = await gameReference.set(game);
-                const [res1, res2 ] = await Promise.all([toogleExistentChallenge(player1Uid, true), toogleExistentChallenge(player2Uid, true)]);
+                await Promise.all([toogleExistentChallenge(authPlayerUid, true), toogleExistentChallenge(challengedPlayerUid, true)]);
             } else {
                 throw new Error(`There is an existent challenge for 1 or both players :(`);
             }
@@ -29,6 +29,22 @@ const handleStartGame = async (authPlayer, challengedPlayer) => {
             throw new Error(`Auth player or Challenged player are not valid`);
         }
         return true;
+    } catch (error) {
+        console.log(stringifyError(error));
+    }
+}
+
+const handleAcceptChallenge = async () =>  {
+    try {
+        return Promise.resolve()
+    } catch (error) {
+        console.log(stringifyError(error));
+    }
+}
+
+const handleDeclineChallenge = async () =>  {
+    try {
+        return Promise.resolve()
     } catch (error) {
         console.log(stringifyError(error));
     }
@@ -56,5 +72,5 @@ function isChallengeForAuthPlayer(game, authPlayer) {
 }
 
 export {
-    handleStartGame, subscribeForChallenges, unsubscribeForChallenges
+    handleCreateGame, subscribeForChallenges, unsubscribeForChallenges, handleAcceptChallenge, handleDeclineChallenge
 }
