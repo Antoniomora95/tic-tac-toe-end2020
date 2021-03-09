@@ -44,31 +44,44 @@ const handleAcceptChallenge = async () =>  {
 
 const handleDeclineChallenge = async () =>  {
     try {
-        return Promise.resolve()
+        // make players available
+        
     } catch (error) {
         console.log(stringifyError(error));
     }
 }
 
-const subscribeForChallenges = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+const subscribeForChallenges = ( authPlayer, setChallenge, setModalOpen, history ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     console.log(childSnapshot, 'auth player now');
-    // only new games and if this for me authPlayer
     let game = childSnapshot.val();
-    if(game && isNewGame(game) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
+      // is_new status and auth player is challenged
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
         debugger
         setChallenge(game);
         setModalOpen(true);
     }
+    // accepted status, auth is challenger
+    else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){
+
+    }
+    // declined status, auth is challenger
+    else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){
+        //  ok, i could have a notification service and execute here ('your challenge was ddclined')
+        console.log('Your challenge was declined');
+    }
 });
 
-const unsubscribeForChallenges = (setPlayers) => {
+const unsubscribeForChallenges = () => {
     gamesRef.off();
 }
-function isNewGame(game) {
-    return game.status && game.status === DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW
+function gameHasStatus(game, status) {
+    return game.status && game.status === status;
 }
 function isChallengeForAuthPlayer(game, authPlayer) {
     return game && game.player2 && game.player2 === authPlayer.uid;
+}
+function isChallengeFromAuthPlayer(game, authPlayer) {
+    return game && game.player1 && game.player1 === authPlayer.uid;
 }
 
 export {

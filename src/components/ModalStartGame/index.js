@@ -8,6 +8,7 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
     let isMounted = true;  
     (async() => {
       if(challenge && challenge.uid && isMounted) {
+        setTimeout(()=>console.log('game auto declined'), 3000)
         // who sent the challenge ?
         let { player1: uid } = challenge;
         let _creator = await findOnePlayer(uid);

@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
-import {  handleStartGame } from '../../services/gameService';
+import {  handleCreateGame } from '../../services/gameService';
 import './Welcome.css';
 import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser } from '../../common/functions';
 import { subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
 import {  unsubscribeForChallenges , subscribeForChallenges} from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
+import { useHistory } from 'react-router';
 
 // is mobile in columns allow you to keep the columns in small sizes
 const PlayerOnline = ({ player, authPlayer }) => {
@@ -19,7 +20,7 @@ const PlayerOnline = ({ player, authPlayer }) => {
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player) } onClick={ () => handleStartGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: isExistentChallenge(authPlayer, player) ? `Not available` : `Start game` } {authPlayer.existentChallenge ? 'true': 'false'}  </button>
+                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player) } onClick={ () => handleCreateGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: isExistentChallenge(authPlayer, player) ? `Not available` : `Start game` } {authPlayer.existentChallenge ? 'true': 'false'}  </button>
             </div>
         </div>
     </li>
@@ -35,10 +36,9 @@ const renderPlayerOnline = (player, authPlayer) => {
     )
 }
 export const Welcome = () => {
+    let history = useHistory();
     // useReducer, not sure if it is better and block the view when click on players
-    //Çconst [state, dispatch] = useReducer(reducer, initialState, init);
-
-
+    //const [state, dispatch] = useReducer(reducer, initialState, init);
     const { currentUser: authPlayer } = useContext(AuthContext);
     const [players, setPlayers] = useState([]);
     const [challenge, setChallenge] = useState({});
@@ -55,8 +55,8 @@ export const Welcome = () => {
                     subscribeForChanges(setPlayers);
                     // it runs once for each element in the table/collection
                     subscribeForChildAdded(setPlayers);
-                    // new game challenge for me 
-                    subscribeForChallenges(authPlayer, setChallenge, setModalOpen);
+                    // new game challenge for me, and from me
+                    subscribeForChallenges(authPlayer, setChallenge, setModalOpen, history);
                 }
             } catch (error) {
                 console.log(error);
