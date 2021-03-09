@@ -1,7 +1,7 @@
 import { stringifyError, isValidUser, isExistentChallenge } from "../common/functions";
 import {   gamesRef } from "../firebase/configuration";
 import { toogleExistentChallenge } from "./playerService";
-import  { DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
+import  { DB_REF_GAME_KEYS, DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
 import { findOnePlayer } from "./authService";
 import { CatGame } from "../common/Classes";
 
@@ -42,13 +42,20 @@ const handleAcceptChallenge = async () =>  {
     }
 }
 
-const handleDeclineChallenge = async () =>  {
-    try {
-        // make players available
-        
-    } catch (error) {
-        console.log(stringifyError(error));
-    }
+const handleDeclineChallenge = (challenge) =>  {
+    ( async() => {
+        try {
+            let { uid: challengeUid, player1: player1Uid, player2: player2Uid } = challenge;
+            let gameReference = gamesRef.child(challengeUid);
+            await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(DB_REF_GAME_AVAILABLE_STATUSES.DECLINED);
+            // release both players
+            await Promise.all([toogleExistentChallenge(player1Uid, false), toogleExistentChallenge(player2Uid, false)]);
+            return true;
+        } catch (error) {
+            console.log(stringifyError(error));
+        } 
+    })()
+    
 }
 
 const subscribeForChallenges = ( authPlayer, setChallenge, setModalOpen, history ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
@@ -71,6 +78,10 @@ const subscribeForChallenges = ( authPlayer, setChallenge, setModalOpen, history
     }
 });
 
+const challengeTimeout = (challenge) => {
+    return setTimeout()
+}
+
 const unsubscribeForChallenges = () => {
     gamesRef.off();
 }
@@ -85,5 +96,5 @@ function isChallengeFromAuthPlayer(game, authPlayer) {
 }
 
 export {
-    handleCreateGame, subscribeForChallenges, unsubscribeForChallenges, handleAcceptChallenge, handleDeclineChallenge
+    handleCreateGame, subscribeForChallenges, unsubscribeForChallenges, handleAcceptChallenge, handleDeclineChallenge, challengeTimeout
 }

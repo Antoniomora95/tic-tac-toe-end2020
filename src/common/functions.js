@@ -6,7 +6,6 @@ const isPlaying = (player) =>  {
     return player && player.isPlaying;
 }
 const isExistentChallenge = (authPlayer, player) => {
-    console.log(authPlayer, player);
     return (authPlayer && authPlayer.existentChallenge) || (player && player.existentChallenge)
 }
 

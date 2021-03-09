@@ -30,7 +30,6 @@ export class SquareObj {
 const Square = ({ value, onClickProp, winner }) => {
     const [disabled, setDisabled] = useState(false);
     useEffect(() => {
-        console.log('run effect', disabled);
         if(!value && disabled){
             // if the square receive an empty value and it was previously disabled, then enable it again
             setDisabled(false);

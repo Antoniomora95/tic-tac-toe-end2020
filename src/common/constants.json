@@ -1,6 +1,16 @@
 {
     "DB_REF_PLAYERS": "players",
     "DB_REF_GAME": "games",
+    "DB_REF_PLAYERS_KEYS": {
+        "IS_ONLINE" : "isOnline",
+        "IS_PLAYING": "isPlaying",
+        "EXISTENT_CHALLENGE": "existentChallenge"
+    },
+    "DB_REF_GAME_KEYS": {
+        "CREATED_AT" : "createdAt",
+        "UID": "uid",
+        "STATUS": "status"
+    },
     "DB_REF_GAME_AVAILABLE_STATUSES" : {
         "IS_NEW" : "is_new",
         "ACCEPTED": "accepted",
@@ -8,8 +18,5 @@
         "STARTED": "started",
         "PAUSED": "paused",
         "FINISHED": "finished"
-    },
-    "DB_REF_PLAYERS_PROP_IS_ONLINE":"isOnline",
-    "DB_REF_PLAYERS_PROP_IS_PLAYING":"isPlaying",
-    "DB_REF_PLAYERS_PROP_EXISTENT_CHALLENGE":"existentChallenge"
+    }
 }

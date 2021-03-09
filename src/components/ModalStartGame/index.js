@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { stringifyError } from '../../common/functions';
 import { findOnePlayer } from '../../services/authService';
 import { handleAcceptChallenge, handleDeclineChallenge } from '../../services/gameService';
 
@@ -6,18 +7,24 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
   const [creator, setCreator] = useState({})
   useEffect(() => {
     let isMounted = true;  
+    let timer = null; 
     (async() => {
-      if(challenge && challenge.uid && isMounted) {
-        setTimeout(()=>console.log('game auto declined'), 3000)
-        // who sent the challenge ?
-        let { player1: uid } = challenge;
-        let _creator = await findOnePlayer(uid);
-        setCreator(_creator);
+      try {
+        if(challenge && challenge.uid && isMounted) {
+          timer = setTimeout(handleDeclineChallenge( challenge ), 4000)
+          // who sent the challenge ?
+          let { player1: uid } = challenge;
+          let _creator = await findOnePlayer(uid);
+          setCreator(_creator);
+        }
+      } catch (error) {
+        console.log(stringifyError(error));
       }
     }
     )()
     return () => {
       isMounted = false;
+      clearTimeout(timer)
     }
   }, [challenge])
 

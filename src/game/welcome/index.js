@@ -3,7 +3,7 @@ import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
 import {  handleCreateGame } from '../../services/gameService';
 import './Welcome.css';
-import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser } from '../../common/functions';
+import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser, stringifyError } from '../../common/functions';
 import { subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
 import {  unsubscribeForChallenges , subscribeForChallenges} from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
@@ -59,18 +59,16 @@ export const Welcome = () => {
                     subscribeForChallenges(authPlayer, setChallenge, setModalOpen, history);
                 }
             } catch (error) {
-                console.log(error);
+                console.log(stringifyError(error));
             }
         })()
         return () => {
-            console.log('unmounted');
             // when commented you will see how react tries to update the state, but that reference no longer exist since the component was unmounted
             unsubscribeForChanges();
             unsubscribeForChallenges();
             isMounted = false;
         }
     }, [])
-    console.log('welcome re rendered');
     return (
         <div className='container'>
             {

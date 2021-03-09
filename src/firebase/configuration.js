@@ -18,7 +18,6 @@ const provider = new firebase.auth.GoogleAuthProvider();
 provider.addScope('profile');
 provider.addScope('email');
 
-console.log(provider, 'deas');
 const database = app.database();
 
 const playersRef = database.ref(`${DB_REF_PLAYERS}`);
