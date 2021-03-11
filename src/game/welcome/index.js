@@ -10,7 +10,7 @@ import { ModalStartGame } from '../../components/ModalStartGame';
 import { useHistory } from 'react-router';
 
 // is mobile in columns allow you to keep the columns in small sizes
-const PlayerOnline = ({ player, authPlayer }) => {
+const PlayerOnline = ({ player, authPlayer, disableView, setDisableView }) => {
     return <li>
         <div className='columns is-mobile'>
             <div className='column  is-4-desktop is-7-mobile has-text-centered-mobile overflow-hidden'>
@@ -20,18 +20,20 @@ const PlayerOnline = ({ player, authPlayer }) => {
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player) } onClick={ () => handleCreateGame(authPlayer, player) }> { isPlaying(player) ? `Is playing`: isExistentChallenge(authPlayer, player) ? `Not available` : `Start game` } {authPlayer.existentChallenge ? 'true': 'false'}  </button>
+                <button className='button is-info is-size-7' disabled={ disableView || gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player) } onClick={ () => handleCreateGame(authPlayer, player, setDisableView) }> { isPlaying(player) ? `Is playing`: isExistentChallenge(authPlayer, player) ? `Not available` : `Start game` } {authPlayer.existentChallenge ? 'true': 'false'}  </button>
             </div>
         </div>
     </li>
 }
-const renderPlayerOnline = (player, authPlayer) => {
+const renderPlayerOnline = (player, authPlayer, disableView, setDisableView) => {
     
     return (
         <PlayerOnline
-            key={player.uid}
-            player={player}
-            authPlayer = {authPlayer}
+            key={ player.uid }
+            player={ player }
+            authPlayer = { authPlayer }
+            disableView = { disableView }
+            setDisableView = { setDisableView }
         />
     )
 }
@@ -43,6 +45,8 @@ export const Welcome = () => {
     const [players, setPlayers] = useState([]);
     const [challenge, setChallenge] = useState({});
     const  [modalOpen, setModalOpen] = useState(false);
+    // true if the user has clicked an item and s still do not have answer from service
+    const [disableView, setDisableView] = useState(false);
 
     const { name } = authPlayer;
     //const [isLoading, setIsLoading] = useState(false);
@@ -76,7 +80,7 @@ export const Welcome = () => {
                         <TitleH3 style={{ paddingTop: 15 }}>Users online</TitleH3>
                         <ol>
                             {
-                                players && players.length && players.map((player) => renderPlayerOnline(player, authPlayer))
+                                players && players.length && players.map((player) => renderPlayerOnline(player, authPlayer, disableView, setDisableView))
                             }
                         </ol>
                     </div> </> : <>...</>

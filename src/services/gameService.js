@@ -6,10 +6,11 @@ import { findOnePlayer } from "./authService";
 import { CatGame } from "../common/Classes";
 
 
-const handleCreateGame = async (authPlayer, challengedPlayer) => {
+const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
     try {
         // create the game model and store it in DB
         console.log('block the view');
+        disableView(true);
         let { uid: authPlayerUid } = authPlayer;
         let {uid: challengedPlayerUid } = challengedPlayer;
 
@@ -17,15 +18,13 @@ const handleCreateGame = async (authPlayer, challengedPlayer) => {
         const [player1, player2 ] = await Promise.all([findOnePlayer(authPlayerUid), findOnePlayer(challengedPlayerUid)]);
         if((isValidUser(player1)) && isValidUser(player2)){
             if(!isExistentChallenge(player1, player2)){
+                disableView(false);
                 console.log('does not exist challenge');
                 let gameUid = gamesRef.push().key;
                 let game = new CatGame(gameUid, authPlayerUid, challengedPlayerUid);
                 let gameReference = gamesRef.child(gameUid);
                 let gameSet = await gameReference.set(game);
                 await Promise.all([toogleExistentGame(authPlayerUid, true), toogleExistentGame(challengedPlayerUid, true)]);
-                let playera =   await findOnePlayer(authPlayerUid);
-                let playerb =   await findOnePlayer(challengedPlayerUid);
-                console.log(playera, playerb, 'was updated game ser');
             } else {
                 throw new Error(`There is an existent challenge for 1 or both players :(`);
             }
@@ -72,12 +71,16 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
 const subscribeChangedGames = ( authPlayer, setModalOpen, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, auth is challenger
     let game = childSnapshot.val();
-    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){}
+    console.log('game changed', game);
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer)){}
     // declined status, auth is challenger
-    else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){
-        debugger
-        //  ok, i could have a notification service and execute here ('your challenge was ddclined')
-        setModalOpen(false);
+    else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer)){
+        if(isChallengeFromAuthPlayer(game, authPlayer)){
+            console.log('your challenge was  declined');
+        } else if(isChallengeForAuthPlayer(game, authPlayer)){
+            // close the modal
+            setModalOpen(false);
+        }
     }
 });
 
