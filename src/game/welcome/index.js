@@ -4,8 +4,8 @@ import { AuthContext } from '../../auth/authContext';
 import {  handleCreateGame } from '../../services/gameService';
 import './Welcome.css';
 import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser, stringifyError } from '../../common/functions';
-import { subscribeForChanges, subscribeForChildAdded, unsubscribeForChanges } from '../../services/playerService';
-import {  unsubscribeForChallenges , subscribeForChallenges} from '../../services/gameService';
+import { subscribeAddedPlayers, subscribeChangedPlayers, unsubscribeFromPlayers } from '../../services/playerService';
+import { subscribeAddedGames, unsubscribeFromGames, subscribeChangedGames} from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
 import { useHistory } from 'react-router';
 
@@ -51,12 +51,11 @@ export const Welcome = () => {
         (async () => {
             try {
                 if (isMounted) {
-                    // if a property changes
-                    subscribeForChanges(setPlayers);
-                    // it runs once for each element in the table/collection
-                    subscribeForChildAdded(setPlayers);
-                    // new game challenge for me, and from me
-                    subscribeForChallenges(authPlayer, setChallenge, setModalOpen, history);
+                    subscribeChangedPlayers(setPlayers);
+                    subscribeAddedPlayers(setPlayers);
+
+                    subscribeAddedGames(authPlayer, setChallenge, setModalOpen);
+                    subscribeChangedGames(authPlayer, setModalOpen, history);
                 }
             } catch (error) {
                 console.log(stringifyError(error));
@@ -64,8 +63,8 @@ export const Welcome = () => {
         })()
         return () => {
             // when commented you will see how react tries to update the state, but that reference no longer exist since the component was unmounted
-            unsubscribeForChanges();
-            unsubscribeForChallenges();
+            unsubscribeFromPlayers();
+            unsubscribeFromGames();
             isMounted = false;
         }
     }, [])

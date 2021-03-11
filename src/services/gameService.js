@@ -1,6 +1,6 @@
 import { stringifyError, isValidUser, isExistentChallenge } from "../common/functions";
 import {   gamesRef } from "../firebase/configuration";
-import { toogleExistentChallenge } from "./playerService";
+import { toogleExistentGame } from "./playerService";
 import  { DB_REF_GAME_KEYS, DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
 import { findOnePlayer } from "./authService";
 import { CatGame } from "../common/Classes";
@@ -17,11 +17,15 @@ const handleCreateGame = async (authPlayer, challengedPlayer) => {
         const [player1, player2 ] = await Promise.all([findOnePlayer(authPlayerUid), findOnePlayer(challengedPlayerUid)]);
         if((isValidUser(player1)) && isValidUser(player2)){
             if(!isExistentChallenge(player1, player2)){
+                console.log('does not exist challenge');
                 let gameUid = gamesRef.push().key;
                 let game = new CatGame(gameUid, authPlayerUid, challengedPlayerUid);
                 let gameReference = gamesRef.child(gameUid);
                 let gameSet = await gameReference.set(game);
-                await Promise.all([toogleExistentChallenge(authPlayerUid, true), toogleExistentChallenge(challengedPlayerUid, true)]);
+                await Promise.all([toogleExistentGame(authPlayerUid, true), toogleExistentGame(challengedPlayerUid, true)]);
+                let playera =   await findOnePlayer(authPlayerUid);
+                let playerb =   await findOnePlayer(challengedPlayerUid);
+                console.log(playera, playerb, 'was updated game ser');
             } else {
                 throw new Error(`There is an existent challenge for 1 or both players :(`);
             }
@@ -34,7 +38,7 @@ const handleCreateGame = async (authPlayer, challengedPlayer) => {
     }
 }
 
-const handleAcceptChallenge = async () =>  {
+const handleAcceptGame = async () =>  {
     try {
         return Promise.resolve()
     } catch (error) {
@@ -42,47 +46,43 @@ const handleAcceptChallenge = async () =>  {
     }
 }
 
-const handleDeclineChallenge = (challenge) =>  {
-    ( async() => {
+const handleDeclineGame = async (game) =>  {
         try {
-            let { uid: challengeUid, player1: player1Uid, player2: player2Uid } = challenge;
-            let gameReference = gamesRef.child(challengeUid);
+            let { uid: gameUid, player1: player1Uid, player2: player2Uid } = game;
+            let gameReference = gamesRef.child(gameUid);
             await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(DB_REF_GAME_AVAILABLE_STATUSES.DECLINED);
             // release both players
-            await Promise.all([toogleExistentChallenge(player1Uid, false), toogleExistentChallenge(player2Uid, false)]);
+            await Promise.all([toogleExistentGame(player1Uid, false), toogleExistentGame(player2Uid, false)]);
             return true;
         } catch (error) {
             console.log(stringifyError(error));
-        } 
-    })()
-    
+        }     
 }
-
-const subscribeForChallenges = ( authPlayer, setChallenge, setModalOpen, history ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+// game and challenge is the same
+const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     console.log(childSnapshot, 'auth player now');
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
-        debugger
         setChallenge(game);
         setModalOpen(true);
     }
-    // accepted status, auth is challenger
-    else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){
+});
 
-    }
+const subscribeChangedGames = ( authPlayer, setModalOpen, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
+    // accepted status, auth is challenger
+    let game = childSnapshot.val();
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){}
     // declined status, auth is challenger
     else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer) && isChallengeFromAuthPlayer()){
+        debugger
         //  ok, i could have a notification service and execute here ('your challenge was ddclined')
-        console.log('Your challenge was declined');
+        setModalOpen(false);
     }
 });
 
-const challengeTimeout = (challenge) => {
-    return setTimeout()
-}
 
-const unsubscribeForChallenges = () => {
+const unsubscribeFromGames = () => {
     gamesRef.off();
 }
 function gameHasStatus(game, status) {
@@ -96,5 +96,5 @@ function isChallengeFromAuthPlayer(game, authPlayer) {
 }
 
 export {
-    handleCreateGame, subscribeForChallenges, unsubscribeForChallenges, handleAcceptChallenge, handleDeclineChallenge, challengeTimeout
+    handleCreateGame, handleAcceptGame, handleDeclineGame, subscribeAddedGames, subscribeChangedGames, unsubscribeFromGames
 }

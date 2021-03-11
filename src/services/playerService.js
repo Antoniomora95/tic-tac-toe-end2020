@@ -24,7 +24,7 @@ export const toogleIsPlaying = async(uid, isPlaying) => {
         console.log(stringifyError(error));
     }
 }
-export const toogleExistentChallenge = async(uid, existentChallenge) => {
+export const toogleExistentGame = async(uid, existentChallenge) => {
     try {
         let playerReference = playersRef.child(uid);
         await playerReference.child(DB_REF_PLAYERS_KEYS.EXISTENT_CHALLENGE).set(existentChallenge);
@@ -34,17 +34,17 @@ export const toogleExistentChallenge = async(uid, existentChallenge) => {
     }
 }
 
-export const subscribeForChanges = (setPlayers) => playersRef.on('child_changed', (childSnapshot, prevChildKey) => {
+export const subscribeChangedPlayers = (setPlayers) => playersRef.on('child_changed', (childSnapshot, prevChildKey) => {
     console.log('child changed');
     getPlayersOnline(setPlayers);
 });
-export const subscribeForChildAdded = (setPlayers) => playersRef.on('child_added', (childSnapshot, prevChildKey) => {
+export const subscribeAddedPlayers = (setPlayers) => playersRef.on('child_added', (childSnapshot, prevChildKey) => {
     console.log('child added');
     getPlayersOnline(setPlayers);
 });
  
 
-export const unsubscribeForChanges = () => {
+export const unsubscribeFromPlayers = () => {
     playersRef.off();
 }
  

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { stringifyError } from '../../common/functions';
 import { findOnePlayer } from '../../services/authService';
-import { handleAcceptChallenge, handleDeclineChallenge } from '../../services/gameService';
+import { handleAcceptGame, handleDeclineGame } from '../../services/gameService';
 
 export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
   const [creator, setCreator] = useState({})
@@ -11,7 +11,8 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
     (async() => {
       try {
         if(challenge && challenge.uid && isMounted) {
-          timer = setTimeout(handleDeclineChallenge( challenge ), 4000)
+          console.log('modal mounted');
+          //timer = setTimeout(handleDeclineChallenge( challenge ), 4000)
           // who sent the challenge ?
           let { player1: uid } = challenge;
           let _creator = await findOnePlayer(uid);
@@ -41,8 +42,8 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
           Hey <strong>{ nameAuthPlayer }</strong> would you like to accept the challenge from: <strong> {creator.name } </strong>
     </section> 
         <footer className="modal-card-foot is-flex is-justify-content-center">
-          <button className="button is-primary" onClick={ handleAcceptChallenge } >Yes of course</button>
-          <button className="button is-danger" onClick={ handleDeclineChallenge }>Nope</button>
+          <button className="button is-primary" onClick={ () => handleAcceptGame() } >Yes of course</button>
+          <button className="button is-danger" onClick={ () => handleDeclineGame(challenge) }>Nope</button>
         </footer>
       </div> 
     </div>
