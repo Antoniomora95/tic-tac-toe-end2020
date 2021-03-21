@@ -5,14 +5,19 @@ import { handleAcceptGame, handleDeclineGame } from '../../services/gameService'
 
 export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
   const [creator, setCreator] = useState({})
+  const [ countdown, setCountdown ] = useState(10);
+
+ 
   useEffect(() => {
     console.log('modal effect executed');
     let isMounted = true;
-    let timer = null;
+    let interval = null;
     (async () => {
       try {
         if (challenge && challenge.uid && isMounted) {
-          //timer = setTimeout(handleDeclineChallenge( challenge ), 4000)
+          interval = setInterval(() => {
+            setCountdown(countdown => countdown - 1);
+          }, 1000);
           // who sent the challenge ?
           let { player1: uid } = challenge;
           let _creator = await findOnePlayer(uid);
@@ -25,10 +30,24 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
     )()
     return () => {
       isMounted = false;
-      clearTimeout(timer)
+      clearTimeout(interval)
     }
   }, [challenge])
 
+  // check countdown and call handleDeclineGame
+  useEffect(() => {
+      ( async() => {
+        try {
+          if( countdown === 0 ){
+            console.log('it is over');
+            handleDeclineGame(challenge)
+          } 
+        } catch (error) {
+          console.log(stringifyError(error));
+        }
+      })()
+      return () =>  null
+  }, [countdown])
   return (
     <div className={`modal ${setModalClasses(modalOpen)}`}>
       <div className="modal-background"></div>
@@ -46,7 +65,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
             <button className="button is-primary mr-6" onClick={() => handleAcceptGame()} >Yes of course</button>
             <button className="button is-danger" onClick={() => handleDeclineGame(challenge)}>Nope</button>
           </div>
-          <small className="pr-2 has-text-danger">You have n seconds </small>
+          <small className="pr-2 has-text-danger">You have { countdown } seconds </small>
         </footer>
       </div>
     </div>
