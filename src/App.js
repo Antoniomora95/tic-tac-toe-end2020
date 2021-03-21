@@ -8,6 +8,7 @@ import { Welcome } from './game/welcome/index';
 import { AuthProvider } from './auth/authContext';
 import { AuthGuardRoute } from './auth/guard/index';
 import { Header } from './Header';
+
 function App() {
   return (
     <div className="App">

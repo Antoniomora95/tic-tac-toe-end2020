@@ -36,7 +36,7 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
         <header className="modal-card-head">
           <p className="modal-card-title">New game challenge</p>
           <small className="pr-2">Sent on: {challenge.createdAt}</small>
-          <button className="delete" aria-label="close"></button>
+          <button className="delete" aria-label="close" onClick={ ()=> handleDeclineGame(challenge)}></button>
         </header> 
         <section className="modal-card-body has-text-dark">
           Hey <strong>{ nameAuthPlayer }</strong> would you like to accept the challenge from: <strong> {creator.name } </strong>
