@@ -9,7 +9,6 @@ import { CatGame } from "../common/Classes";
 const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
     try {
         // create the game model and store it in DB
-        console.log('block the view');
         disableView(true);
         let { uid: authPlayerUid } = authPlayer;
         let {uid: challengedPlayerUid } = challengedPlayer;
@@ -59,7 +58,6 @@ const handleDeclineGame = async (game) =>  {
 }
 // game and challenge is the same
 const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
-    console.log(childSnapshot, 'auth player now');
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
@@ -71,7 +69,6 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
 const subscribeChangedGames = ( authPlayer, setModalOpen, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, auth is challenger
     let game = childSnapshot.val();
-    console.log('game changed', game);
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer)){}
     // declined status, auth is challenger
     else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer)){

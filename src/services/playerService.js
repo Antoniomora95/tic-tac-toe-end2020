@@ -50,7 +50,6 @@ export const unsubscribeFromPlayers = () => {
  
 
 function transformToArray(object) {
-    console.log(object);
     let players = [];
     Object.keys(object).forEach((key) => {
         let player = object[key];

@@ -3,15 +3,15 @@ import { stringifyError } from '../../common/functions';
 import { findOnePlayer } from '../../services/authService';
 import { handleAcceptGame, handleDeclineGame } from '../../services/gameService';
 
-export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
+export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
   const [creator, setCreator] = useState({})
   useEffect(() => {
-    let isMounted = true;  
-    let timer = null; 
-    (async() => {
+    console.log('modal effect executed');
+    let isMounted = true;
+    let timer = null;
+    (async () => {
       try {
-        if(challenge && challenge.uid && isMounted) {
-          console.log('modal mounted');
+        if (challenge && challenge.uid && isMounted) {
           //timer = setTimeout(handleDeclineChallenge( challenge ), 4000)
           // who sent the challenge ?
           let { player1: uid } = challenge;
@@ -36,16 +36,19 @@ export const ModalStartGame = ({modalOpen, nameAuthPlayer, challenge  }) => {
         <header className="modal-card-head">
           <p className="modal-card-title">New game challenge</p>
           <small className="pr-2">Sent on: {challenge.createdAt}</small>
-          <button className="delete" aria-label="close" onClick={ ()=> handleDeclineGame(challenge)}></button>
-        </header> 
+          <button className="delete" aria-label="close" onClick={() => handleDeclineGame(challenge)}></button>
+        </header>
         <section className="modal-card-body has-text-dark">
-          Hey <strong>{ nameAuthPlayer }</strong> would you like to accept the challenge from: <strong> {creator.name } </strong>
-    </section> 
-        <footer className="modal-card-foot is-flex is-justify-content-center">
-          <button className="button is-primary" onClick={ () => handleAcceptGame() } >Yes of course</button>
-          <button className="button is-danger" onClick={ () => handleDeclineGame(challenge) }>Nope</button>
+          Hey <strong>{nameAuthPlayer}</strong> would you like to accept the challenge from: <strong> {creator.name} ? </strong>
+        </section>
+        <footer className="modal-card-foot is-justify-content-space-between">
+          <div>
+            <button className="button is-primary mr-6" onClick={() => handleAcceptGame()} >Yes of course</button>
+            <button className="button is-danger" onClick={() => handleDeclineGame(challenge)}>Nope</button>
+          </div>
+          <small className="pr-2 has-text-danger">You have n seconds </small>
         </footer>
-      </div> 
+      </div>
     </div>
   )
 }
