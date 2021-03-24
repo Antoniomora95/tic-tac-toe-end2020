@@ -36,9 +36,11 @@ const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
     }
 }
 
-const handleAcceptGame = async () =>  {
+const handleAcceptGame = async (game) =>  {
     try {
-        return Promise.resolve()
+        let { uid: gameUid } = game;
+        let gameReference = gamesRef.child(gameUid);
+        await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED);
     } catch (error) {
         console.log(stringifyError(error));
     }
@@ -67,9 +69,13 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
 });
 
 const subscribeChangedGames = ( authPlayer, setModalOpen, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
-    // accepted status, auth is challenger
+    // accepted status, go to board both players
     let game = childSnapshot.val();
-    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer)){}
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer() || isChallengeForAuthPlayer())){
+        // close the modal
+        setModalOpen(false);
+        //history()
+    }
     // declined status, auth is challenger
     else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer)){
         if(isChallengeFromAuthPlayer(game, authPlayer)){

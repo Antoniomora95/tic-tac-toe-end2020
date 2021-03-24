@@ -8,14 +8,14 @@ import { Player } from "../../common/Classes";
 import { stringifyError } from "../../common/functions";
 
 export const SignUp = ({ history }) => {
-  const { updateAuthContext } = useContext(AuthContext);
+  const { updateAuthUser } = useContext(AuthContext);
   const callback = async () => {
     try {
       let { displayName, email, photoURL, uid } = await loginWithPopup();
       let player = new Player(uid, displayName, email, photoURL, true);
       let registered = signupPlayer(player);
       if (registered) {
-        updateAuthContext(player);
+        updateAuthUser(player);
         history.push("/");
       }
     } catch (error) {

@@ -6,7 +6,6 @@ import { handleAcceptGame, handleDeclineGame } from '../../services/gameService'
 export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
   const [creator, setCreator] = useState({})
   const [ countdown, setCountdown ] = useState(10);
-
  
   useEffect(() => {
     console.log('modal effect executed');
@@ -32,8 +31,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
       isMounted = false;
       clearTimeout(interval)
     }
-  }, [challenge])
-
+  }, [challenge]) 
   // check countdown and call handleDeclineGame
   useEffect(() => {
       ( async() => {
@@ -62,7 +60,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
         </section>
         <footer className="modal-card-foot is-justify-content-space-between">
           <div>
-            <button className="button is-primary mr-6" onClick={() => handleAcceptGame()} >Yes of course</button>
+            <button className="button is-primary mr-6" onClick={() => handleAcceptGame( challenge )} >Yes of course</button>
             <button className="button is-danger" onClick={() => handleDeclineGame(challenge)}>Nope</button>
           </div>
           <small className="pr-2 has-text-danger">You have { countdown } seconds </small>

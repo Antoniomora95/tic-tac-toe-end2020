@@ -5,7 +5,7 @@ import { Player } from '../../common/Classes';
 import { stringifyError } from '../../common/functions';
 
 export const Login = ({ history }) => {
-    const { updateAuthContext } = useContext(AuthContext);
+    const { updateAuthUser } = useContext(AuthContext);
 
     const callback = async () => {
         try {
@@ -20,7 +20,7 @@ export const Login = ({ history }) => {
                     // if it was offline then it can access
                     await setPlayerOnline(uidFirebase);
                     let player = new Player(uid, name, email, imageUrl, true, isPlaying,  existentChallenge);
-                    updateAuthContext(player);
+                    updateAuthUser(player);
                     history.push("/");
                 } else {
                     console.log('user already logged in');

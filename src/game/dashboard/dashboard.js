@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
 import {  handleCreateGame } from '../../services/gameService';
-import './Welcome.css';
+import './dashboard.css';
 import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser, stringifyError } from '../../common/functions';
 import { subscribeAddedPlayers, subscribeChangedPlayers, unsubscribeFromPlayers } from '../../services/playerService';
 import { subscribeAddedGames, unsubscribeFromGames, subscribeChangedGames} from '../../services/gameService';
@@ -36,9 +36,11 @@ const renderPlayerOnline = (player, authPlayer, disableView, setDisableView) => 
             setDisableView = { setDisableView }
         />
     )
-}
-export const Welcome = () => {
+} 
+export const Dashboard = () => {
+    console.log('dashboard');
     let history = useHistory();
+    debugger
     // useReducer, not sure if it is better and block the view when click on players
     //const [state, dispatch] = useReducer(reducer, initialState, init);
     const { currentUser: authPlayer } = useContext(AuthContext);
