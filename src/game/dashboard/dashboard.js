@@ -40,7 +40,6 @@ const renderPlayerOnline = (player, authPlayer, disableView, setDisableView) => 
 export const Dashboard = () => {
     console.log('dashboard');
     let history = useHistory();
-    debugger
     // useReducer, not sure if it is better and block the view when click on players
     //const [state, dispatch] = useReducer(reducer, initialState, init);
     const { currentUser: authPlayer } = useContext(AuthContext);

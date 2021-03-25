@@ -10,6 +10,7 @@ import { AuthGuardRoute } from './auth/guard/index';
 import { Header } from './Header';
 
 function App() {
+  // tip, if your routes do not work maybe you need to change the order in the switch
   return (
     <div className="App">
       <AuthProvider>
@@ -18,11 +19,7 @@ function App() {
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/" >
-              <Redirect to={"/home"}></Redirect>
-            </Route>
-            <Route  path="/home" component={Task} />
-            <Redirect path="*" to={"/login"}/>
+            <AuthGuardRoute  path="/" component={ GameOutlet } />
           </Switch>
         </Router>
       </AuthProvider>
@@ -33,16 +30,19 @@ function App() {
 
 const Task = () => {
   let { path, url } = useRouteMatch();
-  console.log(path, url, 'task...');
+  console.log(path, url, 'task....');
   return (<>
     <h1>This is the title of route task</h1>
-    <Link to={`${url}/one`}> go to one </Link>
-    <Link to={`${url}/two`}> go to two </Link>
-
+    <Link to={`${url}on`}> go to one </Link>
+    <Link to={`${url}two`}> go to two </Link>
     <Switch>
-      <Route  path={`${path}/one`}><p>this is route one...</p></Route>
-      <Route  path={`${path}/two`}><p>this is route two...</p></Route>
-      <Redirect path="*" to={`${path}`}/>
+      <Route  path={`${path}one`}><p>this is route one...</p></Route>
+      <Route  path={`${path}two`}><p>this is route two...</p></Route>
+      <Route  path={`${path}dashboard`} />
+      <Route  path="/">
+        <Redirect to={"/dasboard"}></Redirect>
+      </Route>
+      <Route path="*" render = {()=> <p>this is route not found...</p>}/>
     </Switch>
   </>
 
