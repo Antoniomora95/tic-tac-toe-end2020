@@ -15,13 +15,11 @@ export const GameOutlet = () => {
             <Link to={`${url}board`}> Board link </Link>
             <Switch>
                 <Route exact path={`${path}one`}><p>this is route one...</p></Route>
-                <Route exact path={`${path}two`}><p>this is route two...</p></Route>
-
+                <Route exact path={`${path}two`}><p>this is rohis is rohis is route two..ute two..ute two..</p></Route>
                 <GameGuardRoute exact path={`${path}board`} component= { Board }/>
                 <Route exact path={`${path}dashboard`} component= { Dashboard }/>
-
                 <Route exact path="/">
-                    <Redirect to={"/dashboard"}></Redirect>
+                    <Redirect to={"/board"}></Redirect>
                 </Route>
                 
                 <Route path="*" render={() => <p>this is route not found...</p>} />

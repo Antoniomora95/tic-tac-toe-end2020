@@ -1,4 +1,4 @@
-import { stringifyError, isValidUser, isExistentChallenge } from "../common/functions";
+import { stringifyError, isValidUser, isExistentChallenge, createGameInstance } from "../common/functions";
 import {   gamesRef } from "../firebase/configuration";
 import { toogleExistentGame } from "./playerService";
 import  { DB_REF_GAME_KEYS, DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
@@ -58,26 +58,40 @@ const handleDeclineGame = async (game) =>  {
             console.log(stringifyError(error));
         }     
 }
-// game and challenge is the same
-const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+
+const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
         setChallenge(game);
         setModalOpen(true);
     }
+    // when there is a new game, and when comp load ----> there might be an accepted game
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
+        // close the modal
+
+        setModalOpen(false);
+        console.log(createGameInstance(game), 'added games');
+        updateAuthGame(createGameInstance(game));
+        history.push("/")
+    }
 });
 
-const subscribeChangedGames = ( authPlayer, setModalOpen, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
+const subscribeChangedGames = ( authPlayer, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, go to board both players
+    debugger
     let game = childSnapshot.val();
-    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer() || isChallengeForAuthPlayer())){
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
         // close the modal
+        console.log('accpeted game..', game);
         setModalOpen(false);
-        //history()
+        console.log(createGameInstance(game), 'changed games');
+        updateAuthGame(createGameInstance(game));
+        history.push("/");
     }
     // declined status, auth is challenger
     else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer)){
+        history.push("/");
         if(isChallengeFromAuthPlayer(game, authPlayer)){
             console.log('your challenge was  declined');
         } else if(isChallengeForAuthPlayer(game, authPlayer)){

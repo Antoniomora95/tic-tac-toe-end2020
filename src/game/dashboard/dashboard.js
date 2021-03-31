@@ -11,6 +11,7 @@ import { useHistory } from 'react-router';
 
 // is mobile in columns allow you to keep the columns in small sizes
 const PlayerOnline = ({ player, authPlayer, disableView, setDisableView }) => {
+
     return <li>
         <div className='columns is-mobile'>
             <div className='column  is-4-desktop is-7-mobile has-text-centered-mobile overflow-hidden'>
@@ -37,20 +38,17 @@ const renderPlayerOnline = (player, authPlayer, disableView, setDisableView) => 
         />
     )
 } 
-export const Dashboard = () => {
+export const Dashboard = ({ history }) => {
     console.log('dashboard');
-    let history = useHistory();
-    // useReducer, not sure if it is better and block the view when click on players
-    //const [state, dispatch] = useReducer(reducer, initialState, init);
     const { currentUser: authPlayer } = useContext(AuthContext);
+    const { updateAuthGame } = useContext(AuthContext);
+
     const [players, setPlayers] = useState([]);
     const [challenge, setChallenge] = useState({});
     const  [modalOpen, setModalOpen] = useState(false);
-    // true if the user has clicked an item and s still do not have answer from service
     const [disableView, setDisableView] = useState(false);
 
     const { name } = authPlayer;
-    //const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         let isMounted = true;
         (async () => {
@@ -59,8 +57,8 @@ export const Dashboard = () => {
                     subscribeChangedPlayers(setPlayers);
                     subscribeAddedPlayers(setPlayers);
 
-                    subscribeAddedGames(authPlayer, setChallenge, setModalOpen);
-                    subscribeChangedGames(authPlayer, setModalOpen, history);
+                    subscribeChangedGames(authPlayer, setModalOpen, updateAuthGame, history );
+                    subscribeAddedGames(authPlayer, setChallenge, setModalOpen, updateAuthGame, history);
                 }
             } catch (error) {
                 console.log(stringifyError(error));

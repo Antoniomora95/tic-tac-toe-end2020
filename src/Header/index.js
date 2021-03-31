@@ -5,7 +5,7 @@ import { AuthUserCard } from '../components/AuthUser/index';
 import { isValidUser } from '../common/functions';
 
 export const Header = () => {
-  const { currentUser, updateAuthUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   console.log('Header is running ---');
   return (
     <header className='App-header has-background-primary has-text-white'>
@@ -15,7 +15,7 @@ export const Header = () => {
         </div>
         <div className='column p-0 is-flex is-justify-content-center is-align-items-center'>
           {
-            isValidUser(currentUser) ? <AuthUserCard currentUser={currentUser} updateAuthUser={ updateAuthUser } /> : <div className='is-size-6 has-text-white  has-text-weight-medium'>No logged user</div>
+            isValidUser(currentUser) ? <AuthUserCard /> : <div className='is-size-6 has-text-white  has-text-weight-medium'>No logged user</div>
           }
         </div>
       </div>

@@ -37,12 +37,13 @@ export const findOnePlayer = async (uid) => {
     }
 }
 
-export const signOutPlayer = (updateAuthUser, uid) => {
+export const signOutPlayer = (updateAuthUser, updateAuthGame, uid) => {
     return async () => { 
         try {
             let playerReference = playersRef.child(uid);
             await playerReference.child(DB_REF_PLAYERS_KEYS.IS_ONLINE).set(false);
-            updateAuthUser({});
+            updateAuthUser();
+            updateAuthGame()
             await app.auth().signOut();  
         } catch (error) {
             throw error;

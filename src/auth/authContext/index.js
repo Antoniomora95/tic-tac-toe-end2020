@@ -4,7 +4,7 @@ export const AuthContext = React.createContext({
     currentUser: {},
     updateAuthUser: () => { },
     currentGame: {},
-    updateCurrentGame: ()=> { }
+    updateAuthGame: ()=> { }
 });
 
 export const AuthProvider = ({ children }) => {
