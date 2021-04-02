@@ -19,10 +19,10 @@ const stringifyError = error => {
     }
 }
 
-const createGameInstance = (game) => {
+const getGameInstance = (game) => {
     let { uid, status, player1, player2, nowPlaying, createdAt, board, winner } = game;
     return new CatGame(uid, player1, player2, winner, status, createdAt, nowPlaying, board)
 }
 export {
-    isValidUser, gameNotAllowed, isPlaying, isExistentChallenge, stringifyError, createGameInstance
+    isValidUser, gameNotAllowed, isPlaying, isExistentChallenge, stringifyError, getGameInstance
 }

@@ -19,7 +19,7 @@ export const GameOutlet = () => {
                 <GameGuardRoute exact path={`${path}board`} component= { Board }/>
                 <Route exact path={`${path}dashboard`} component= { Dashboard }/>
                 <Route exact path="/">
-                    <Redirect to={"/board"}></Redirect>
+                    <Redirect to={"/dashboard"}></Redirect>
                 </Route>
                 
                 <Route path="*" render={() => <p>this is route not found...</p>} />

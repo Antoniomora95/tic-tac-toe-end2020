@@ -1,4 +1,4 @@
-import { stringifyError, isValidUser, isExistentChallenge, createGameInstance } from "../common/functions";
+import { stringifyError, isValidUser, isExistentChallenge, getGameInstance } from "../common/functions";
 import {   gamesRef } from "../firebase/configuration";
 import { toogleExistentGame } from "./playerService";
 import  { DB_REF_GAME_KEYS, DB_REF_GAME_AVAILABLE_STATUSES } from '../common/constants.json';
@@ -66,15 +66,8 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen, updateAuth
         setChallenge(game);
         setModalOpen(true);
     }
-    // when there is a new game, and when comp load ----> there might be an accepted game
-    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
-        // close the modal
-
-        setModalOpen(false);
-        console.log(createGameInstance(game), 'added games');
-        updateAuthGame(createGameInstance(game));
-        history.push("/")
-    }
+    // I do not need to open the board page at first
+   
 });
 
 const subscribeChangedGames = ( authPlayer, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
@@ -85,13 +78,13 @@ const subscribeChangedGames = ( authPlayer, setModalOpen, updateAuthGame, histor
         // close the modal
         console.log('accpeted game..', game);
         setModalOpen(false);
-        console.log(createGameInstance(game), 'changed games');
-        updateAuthGame(createGameInstance(game));
-        history.push("/");
+        console.log(getGameInstance(game), 'changed games');
+        updateAuthGame(getGameInstance(game));
+        history.push("/board");
     }
     // declined status, auth is challenger
     else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED) && isValidUser(authPlayer)){
-        history.push("/");
+        //history.push("/");
         if(isChallengeFromAuthPlayer(game, authPlayer)){
             console.log('your challenge was  declined');
         } else if(isChallengeForAuthPlayer(game, authPlayer)){
