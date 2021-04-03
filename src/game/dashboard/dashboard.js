@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
-import {  handleCreateGame } from '../../services/gameService';
+import { handleCreateGame } from '../../services/gameService';
 import './dashboard.css';
 import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser, stringifyError } from '../../common/functions';
 import { subscribeAddedPlayers, subscribeChangedPlayers, unsubscribeFromPlayers } from '../../services/playerService';
-import { subscribeAddedGames, unsubscribeFromGames, subscribeChangedGames} from '../../services/gameService';
+import { subscribeAddedGames, unsubscribeFromGames, subscribeChangedGames } from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
-import { useHistory } from 'react-router';
+import { Prompt } from 'react-router';
+
+
 
 // is mobile in columns allow you to keep the columns in small sizes
 const PlayerOnline = ({ player, authPlayer, disableView, setDisableView }) => {
@@ -21,23 +23,23 @@ const PlayerOnline = ({ player, authPlayer, disableView, setDisableView }) => {
                 {player.email}
             </div>
             <div className='column  is-2-desktop is-5-mobile is-flex is-justify-content-center is-align-items-center'>
-                <button className='button is-info is-size-7' disabled={ disableView || gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player) } onClick={ () => handleCreateGame(authPlayer, player, setDisableView) }> { isPlaying(player) ? `Is playing`: isExistentChallenge(authPlayer, player) ? `Not available` : `Start game` } {authPlayer.existentChallenge ? 'true': 'false'}  </button>
+                <button className='button is-info is-size-7' disabled={disableView || gameNotAllowed(authPlayer, player) || isPlaying(player) || isExistentChallenge(authPlayer, player)} onClick={() => handleCreateGame(authPlayer, player, setDisableView)}> {isPlaying(player) ? `Is playing` : isExistentChallenge(authPlayer, player) ? `Not available` : `Start game`} {authPlayer.existentChallenge ? 'true' : 'false'}  </button>
             </div>
         </div>
     </li>
 }
 const renderPlayerOnline = (player, authPlayer, disableView, setDisableView) => {
-    
+
     return (
         <PlayerOnline
-            key={ player.uid }
-            player={ player }
-            authPlayer = { authPlayer }
-            disableView = { disableView }
-            setDisableView = { setDisableView }
+            key={player.uid}
+            player={player}
+            authPlayer={authPlayer}
+            disableView={disableView}
+            setDisableView={setDisableView}
         />
     )
-} 
+}
 export const Dashboard = ({ history }) => {
     console.log('dashboard');
     const { currentUser: authPlayer } = useContext(AuthContext);
@@ -45,8 +47,10 @@ export const Dashboard = ({ history }) => {
 
     const [players, setPlayers] = useState([]);
     const [challenge, setChallenge] = useState({});
-    const  [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const [disableView, setDisableView] = useState(false);
+
+
 
     const { name } = authPlayer;
     useEffect(() => {
@@ -57,7 +61,7 @@ export const Dashboard = ({ history }) => {
                     subscribeChangedPlayers(setPlayers);
                     subscribeAddedPlayers(setPlayers);
 
-                    subscribeChangedGames(authPlayer, setModalOpen, updateAuthGame, history );
+                    subscribeChangedGames(authPlayer, setModalOpen, updateAuthGame, history);
                     subscribeAddedGames(authPlayer, setChallenge, setModalOpen, updateAuthGame, history);
                 }
             } catch (error) {
@@ -69,10 +73,13 @@ export const Dashboard = ({ history }) => {
             unsubscribeFromPlayers();
             unsubscribeFromGames();
             isMounted = false;
-        }
+        } 
     }, [])
     return (
+
         <div className='container'>
+            
+
             {
                 isValidUser(authPlayer) ? <>
                     <div className='content'>
@@ -84,7 +91,7 @@ export const Dashboard = ({ history }) => {
                         </ol>
                     </div> </> : <>...</>
             }
-           {modalOpen && <ModalStartGame modalOpen = { modalOpen } nameAuthPlayer={ name } challenge = { challenge }/> }
+            {modalOpen && <ModalStartGame modalOpen={modalOpen} nameAuthPlayer={name} challenge={challenge} />}
         </div>
     )
 }

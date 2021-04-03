@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { stringifyError } from '../../common/functions';
 import { findOnePlayer } from '../../services/authService';
-import { handleAcceptGame, handleDeclineGame } from '../../services/gameService';
+import { handleAcceptGame, handleDeclineCancelGame } from '../../services/gameService';
+import { DB_REF_GAME_AVAILABLE_STATUSES } from '../../common/constants.json'
 
 export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
   const [creator, setCreator] = useState({})
@@ -38,7 +39,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
         try {
           if( countdown === 0 ){
             console.log('it is over');
-            handleDeclineGame(challenge)
+            handleDeclineCancelGame(challenge, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED)
           } 
         } catch (error) {
           console.log(stringifyError(error));
@@ -53,7 +54,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
         <header className="modal-card-head">
           <p className="modal-card-title">New game challenge</p>
           <small className="pr-2">Sent on: {challenge.createdAt}</small>
-          <button className="delete" aria-label="close" onClick={() => handleDeclineGame(challenge)}></button>
+          <button className="delete" aria-label="close" onClick={() => handleDeclineCancelGame(challenge, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED)}></button>
         </header>
         <section className="modal-card-body has-text-dark">
           Hey <strong>{nameAuthPlayer}</strong> would you like to accept the challenge from: <strong> {creator.name} ? </strong>
@@ -61,7 +62,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
         <footer className="modal-card-foot is-justify-content-space-between">
           <div>
             <button className="button is-primary mr-6" onClick={() => handleAcceptGame( challenge )} >Yes of course</button>
-            <button className="button is-danger" onClick={() => handleDeclineGame(challenge)}>Nope</button>
+            <button className="button is-danger" onClick={() => handleDeclineCancelGame(challenge, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED)}>Nope</button>
           </div>
           <small className="pr-2 has-text-danger">You have { countdown } seconds </small>
         </footer>

@@ -7,6 +7,8 @@ import { Dashboard } from './dashboard/dashboard';
 
 export const GameOutlet = () => {
     let { path, url } = useRouteMatch();
+
+    
     return (
         <>
             <h1>This is the title of route task</h1>

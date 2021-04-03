@@ -16,7 +16,7 @@
         "ACCEPTED": "accepted",
         "DECLINED": "declined",
         "STARTED": "started",
-        "PAUSED": "paused",
+        "CANCELED": "canceled",
         "FINISHED": "finished"
     }
 }

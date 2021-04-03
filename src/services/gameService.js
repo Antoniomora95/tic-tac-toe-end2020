@@ -46,11 +46,11 @@ const handleAcceptGame = async (game) =>  {
     }
 }
 
-const handleDeclineGame = async (game) =>  {
+const handleDeclineCancelGame = async (game, gameStatus) =>  {
         try {
             let { uid: gameUid, player1: player1Uid, player2: player2Uid } = game;
             let gameReference = gamesRef.child(gameUid);
-            await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(DB_REF_GAME_AVAILABLE_STATUSES.DECLINED);
+            await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(gameStatus);
             // release both players
             await Promise.all([toogleExistentGame(player1Uid, false), toogleExistentGame(player2Uid, false)]);
             return true;
@@ -59,6 +59,7 @@ const handleDeclineGame = async (game) =>  {
         }     
 }
 
+
 const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
@@ -66,8 +67,7 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen, updateAuth
         setChallenge(game);
         setModalOpen(true);
     }
-    // I do not need to open the board page at first
-   
+    // I do not need to open the board page at first 
 });
 
 const subscribeChangedGames = ( authPlayer, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
@@ -109,5 +109,5 @@ function isChallengeFromAuthPlayer(game, authPlayer) {
 }
 
 export {
-    handleCreateGame, handleAcceptGame, handleDeclineGame, subscribeAddedGames, subscribeChangedGames, unsubscribeFromGames
+    handleCreateGame, handleAcceptGame, handleDeclineCancelGame, subscribeAddedGames, subscribeChangedGames, unsubscribeFromGames
 }

@@ -5,7 +5,7 @@ import { AuthContext } from '../../auth/authContext';
 
 
 export const AuthUserCard = () => {
-  const { currentUser, updateAuthUser, updateAuthGame } = useContext(AuthContext);
+  const { currentUser, currentGame, updateAuthUser, updateAuthGame } = useContext(AuthContext);
     return (
         <div className='grid grid-auth-user-card'>
             <div className='is-flex is-justify-content-around is-align-items-center'>
@@ -13,7 +13,7 @@ export const AuthUserCard = () => {
                 <p className='pl-3 is-size-6'>{currentUser.name}</p>
             </div>
             <div className='is-flex is-justify-content-flex-end is-align-items-center'>
-                <button className='button mr-1 is-link is-size-7' onClick={signOutPlayer(updateAuthUser, updateAuthGame, currentUser.uid)}>Sign Out</button>
+                <button className='button mr-1 is-link is-size-7' onClick={signOutPlayer(updateAuthUser, updateAuthGame, currentUser.uid, currentGame)}>Sign Out</button>
             </div>
         </div>
     )
