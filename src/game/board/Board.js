@@ -1,4 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
+import { AuthContext } from '../../auth/authContext';
+import {subscribeChangedGames, unsubscribeFromGames } from '../../services/gameService';
 import './Board.css';
 const calculateWinner = (squares) => {
     const lines = [
@@ -57,8 +59,9 @@ const MovementOrWinnerView = ({ boardActualGame, isPlayingX }) => {
     return <h4>The next movement is: {isPlayingX ? 'X': 'O'}</h4>
 }
 export class Board extends Component {
-    constructor() {
-        super();
+    static contextType = AuthContext;
+    constructor(props) {
+        super(props);
         this.state = {
             isPlayingX: true,
             boardActualGame: [],
@@ -71,7 +74,14 @@ export class Board extends Component {
                 ...state,
                 boardActualGame: this.fillInitialArray(9)
             }
-        })
+        });
+        const { currentUser: authPlayer } = this.context;
+        let { history } = this.props;
+        console.log('board...');
+        subscribeChangedGames(authPlayer, history)
+    }
+    componentWillUnmount(){
+        unsubscribeFromGames()
     }
     fillInitialArray(length_) {
         var arr = new Array(length_);
@@ -99,11 +109,6 @@ export class Board extends Component {
         let { historyGame } = this.state;
 
         let boardGameAt = historyGame[index - 1];
-        // index strts at 1
-        //  array.slice(start, end (not included))
-        //const animals = ['ant', 'bison'];
-        //console.log(animals.slice(0, 1));
-        // output:  ["ant"]
         let gameHistoryAt = this.state.historyGame.slice(0, index)
         this.setState(state => {
             return {

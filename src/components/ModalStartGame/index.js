@@ -9,7 +9,6 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
   const [ countdown, setCountdown ] = useState(10);
  
   useEffect(() => {
-    console.log('modal effect executed');
     let isMounted = true;
     let interval = null;
     (async () => {
@@ -38,7 +37,6 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
       ( async() => {
         try {
           if( countdown === 0 ){
-            console.log('it is over');
             handleDeclineCancelGame(challenge, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED)
           } 
         } catch (error) {

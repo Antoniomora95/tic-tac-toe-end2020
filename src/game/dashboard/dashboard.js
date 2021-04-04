@@ -7,7 +7,6 @@ import { gameNotAllowed, isExistentChallenge, isPlaying, isValidUser, stringifyE
 import { subscribeAddedPlayers, subscribeChangedPlayers, unsubscribeFromPlayers } from '../../services/playerService';
 import { subscribeAddedGames, unsubscribeFromGames, subscribeChangedGames } from '../../services/gameService';
 import { ModalStartGame } from '../../components/ModalStartGame';
-import { Prompt } from 'react-router';
 
 
 
@@ -41,7 +40,6 @@ const renderPlayerOnline = (player, authPlayer, disableView, setDisableView) => 
     )
 }
 export const Dashboard = ({ history }) => {
-    console.log('dashboard');
     const { currentUser: authPlayer } = useContext(AuthContext);
     const { updateAuthGame } = useContext(AuthContext);
 
@@ -61,8 +59,8 @@ export const Dashboard = ({ history }) => {
                     subscribeChangedPlayers(setPlayers);
                     subscribeAddedPlayers(setPlayers);
 
-                    subscribeChangedGames(authPlayer, setModalOpen, updateAuthGame, history);
-                    subscribeAddedGames(authPlayer, setChallenge, setModalOpen, updateAuthGame, history);
+                    subscribeChangedGames(authPlayer, history,  setModalOpen, updateAuthGame);
+                    subscribeAddedGames(authPlayer,  setChallenge, setModalOpen);
                 }
             } catch (error) {
                 console.log(stringifyError(error));

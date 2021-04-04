@@ -30,7 +30,6 @@ function App() {
 
 const Task = () => {
   let { path, url } = useRouteMatch();
-  console.log(path, url, 'task....');
   return (<>
     <h1>This is the title of route task</h1>
     <Link to={`${url}on`}> go to one </Link>

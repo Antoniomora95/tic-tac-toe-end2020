@@ -1,7 +1,9 @@
 
 import { DB_REF_PLAYERS_KEYS, DB_REF_GAME_AVAILABLE_STATUSES  } from '../common/constants.json';
+import { stringifyError } from '../common/functions';
 import { provider, app, playersRef }   from '../firebase/configuration';
 import { handleDeclineCancelGame } from './gameService'
+import { toogleIsPlaying } from './playerService';
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {
     try {
@@ -44,14 +46,16 @@ export const signOutPlayer = (updateAuthUser, updateAuthGame, uid, currentGame) 
             // set user offline, set false existent challenge and cancel game
             let playerReference = playersRef.child(uid);
             if(currentGame && currentGame.uid) {
+                let { player1: player1Uid, player2: player2Uid } = currentGame;
                 await handleDeclineCancelGame(currentGame, DB_REF_GAME_AVAILABLE_STATUSES.CANCELED);
+                await Promise.all([toogleIsPlaying(player1Uid, false), toogleIsPlaying(player2Uid, false)]);
             }
             await playerReference.child(DB_REF_PLAYERS_KEYS.IS_ONLINE).set(false);
             updateAuthUser();
             updateAuthGame();
             await app.auth().signOut();  
         } catch (error) {
-            throw error;
+            console.log(stringifyError(error), 'error in 59');
         }
-    } 
-}
+    }  
+} 

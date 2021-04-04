@@ -9,7 +9,6 @@ const { ACCEPTED } = DB_REF_GAME_AVAILABLE_STATUSES;
 
 export const AuthGuardRoute = ({component: RouteComponent, ...rest}) => {
     const { currentUser } = useContext(AuthContext);
-    console.log(currentUser, 'AuthGuardRoute...');
     return(
         <Route
         {...rest}
@@ -22,7 +21,6 @@ export const AuthGuardRoute = ({component: RouteComponent, ...rest}) => {
 export const GameGuardRoute = ( { component: RouteComponent, ...rest } ) => {
     const { currentGame } = useContext(AuthContext);
     let { path } = useRouteMatch();
-    console.log(path, currentGame, 'GameGuardRoute...');
     return(
         <Route
         {...rest}

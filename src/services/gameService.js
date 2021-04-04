@@ -18,7 +18,6 @@ const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
         if((isValidUser(player1)) && isValidUser(player2)){
             if(!isExistentChallenge(player1, player2)){
                 disableView(false);
-                console.log('does not exist challenge');
                 let gameUid = gamesRef.push().key;
                 let game = new CatGame(gameUid, authPlayerUid, challengedPlayerUid);
                 let gameReference = gamesRef.child(gameUid);
@@ -60,7 +59,8 @@ const handleDeclineCancelGame = async (game, gameStatus) =>  {
 }
 
 
-const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
+    debugger
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
@@ -70,15 +70,14 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen, updateAuth
     // I do not need to open the board page at first 
 });
 
-const subscribeChangedGames = ( authPlayer, setModalOpen, updateAuthGame, history ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
+const subscribeChangedGames = ( authPlayer, history,  setModalOpen, updateAuthGame ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, go to board both players
     debugger
     let game = childSnapshot.val();
+    console.log(game, 'listening game changed. [canceled maybe]....'); 
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
-        // close the modal
-        console.log('accpeted game..', game);
+        // close the moda
         setModalOpen(false);
-        console.log(getGameInstance(game), 'changed games');
         updateAuthGame(getGameInstance(game));
         history.push("/board");
     }
@@ -92,7 +91,16 @@ const subscribeChangedGames = ( authPlayer, setModalOpen, updateAuthGame, histor
             setModalOpen(false);
         }
     }
+     // canceled status, auth is part of the game
+     else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.CANCELED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
+        // route the player to dashboard
+        console.log(game, 'official canceled'); 
+
+        history.push("/")
+    }
 });
+
+
 
 
 const unsubscribeFromGames = () => {

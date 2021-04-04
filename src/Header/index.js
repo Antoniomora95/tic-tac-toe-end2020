@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { TitleH3 } from '../components/TitleH3';
 import { AuthContext } from '../auth/authContext';
 import { AuthUserCard } from '../components/AuthUser/index';
 import { isValidUser } from '../common/functions';
 
-export const Header = () => {
+export const Header = ({history}) => {
   const { currentUser } = useContext(AuthContext);
-  console.log('Header is running ---');
+  console.log('Header is running ---'); 
   return (
     <header className='App-header has-background-primary has-text-white'>
       <div className='columns m-0 height-100 is-mobile'>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, Redirect, useRouteMatch, Link } from "react-router-dom";
 import { GameGuardRoute } from '../auth/guard';
 import { Board } from './board/Board';
+import { Board2 } from './board/Board2';
 import { Dashboard } from './dashboard/dashboard';
 
 
@@ -18,7 +19,7 @@ export const GameOutlet = () => {
             <Switch>
                 <Route exact path={`${path}one`}><p>this is route one...</p></Route>
                 <Route exact path={`${path}two`}><p>this is rohis is rohis is route two..ute two..ute two..</p></Route>
-                <GameGuardRoute exact path={`${path}board`} component= { Board }/>
+                <GameGuardRoute exact path={`${path}board`} component= { Board2 }/>
                 <Route exact path={`${path}dashboard`} component= { Dashboard }/>
                 <Route exact path="/">
                     <Redirect to={"/dashboard"}></Redirect>
