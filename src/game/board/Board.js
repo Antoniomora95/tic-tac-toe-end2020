@@ -80,6 +80,8 @@ export class Board extends Component {
         console.log('board...');
         subscribeChangedGames(authPlayer, history)
     }
+
+
     componentWillUnmount(){
         unsubscribeFromGames()
     }
@@ -90,6 +92,12 @@ export class Board extends Component {
         }
         return arr;
     }
+
+
+
+
+
+
     handleClick(index) {
         let { isPlayingX, boardActualGame, historyGame } = this.state;
         if (!calculateWinner(boardActualGame)) {
@@ -105,6 +113,10 @@ export class Board extends Component {
             });
         }
     }
+
+
+
+
     goToMovement(index) {
         let { historyGame } = this.state;
 
@@ -118,6 +130,13 @@ export class Board extends Component {
             }
         })
     }
+
+    
+
+
+
+
+
     renderSquare({ id, value }) {
         return (
             <Square
@@ -128,6 +147,9 @@ export class Board extends Component {
             />
         )
     }
+
+
+
     renderHistoryItem(index) {
         return (
             <HistoryItem
@@ -138,12 +160,22 @@ export class Board extends Component {
         )
 
     }
+
+
+
+
+
+
     render() {
         const { boardActualGame, historyGame, isPlayingX } = this.state;
         const historyItems = [];
+
+
         for (let index = 1; index < historyGame.length ; index++) {
             historyItems.push(this.renderHistoryItem(index ))
         }
+
+        
         return <div className="containerTic">
             <div className="boardWrapper">
                 <div className="boardTitle">
