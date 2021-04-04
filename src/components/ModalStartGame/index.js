@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { stringifyError } from '../../common/functions';
 import { findOnePlayer } from '../../services/authService';
-import { handleAcceptGame, handleDeclineCancelGame } from '../../services/gameService';
+import { handleAcceptStartGame, handleDeclineCancelGame } from '../../services/gameService';
 import { DB_REF_GAME_AVAILABLE_STATUSES } from '../../common/constants.json'
 
 export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
@@ -59,7 +59,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
         </section>
         <footer className="modal-card-foot is-justify-content-space-between">
           <div>
-            <button className="button is-primary mr-6" onClick={() => handleAcceptGame( challenge )} >Yes of course</button>
+            <button className="button is-primary mr-6" onClick={() => handleAcceptStartGame( challenge, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED )} >Yes of course</button>
             <button className="button is-danger" onClick={() => handleDeclineCancelGame(challenge, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED)}>Nope</button>
           </div>
           <small className="pr-2 has-text-danger">You have { countdown } seconds </small>

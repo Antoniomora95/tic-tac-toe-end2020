@@ -48,7 +48,7 @@ export const Dashboard = ({ history }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [disableView, setDisableView] = useState(false);
 
-
+// once you are logged in please ensure all your new, accepted, started games go to canceled ?? maybe  
 
     const { name } = authPlayer;
     useEffect(() => {
@@ -59,7 +59,7 @@ export const Dashboard = ({ history }) => {
                     subscribeChangedPlayers(setPlayers);
                     subscribeAddedPlayers(setPlayers);
 
-                    subscribeChangedGames(authPlayer, history,  setModalOpen, updateAuthGame);
+                    subscribeChangedGames(authPlayer, history, updateAuthGame, setModalOpen);
                     subscribeAddedGames(authPlayer,  setChallenge, setModalOpen);
                 }
             } catch (error) {

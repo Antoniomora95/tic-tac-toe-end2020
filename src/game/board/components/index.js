@@ -19,4 +19,11 @@ const Square = ({ value, onClickProp, winner }) => {
     );
 }
 
-export { Square }
+const NextMovement = ({ currentUser, otherPlayer,  currentGame }) => {
+    let name = currentGame.nowPlaying === currentUser.uid ? currentUser.name : otherPlayer.name
+    return(
+        <h5>The next movement is for: {name}</h5>
+    )
+}
+
+export { Square, NextMovement }

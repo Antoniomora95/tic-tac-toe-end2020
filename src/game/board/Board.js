@@ -174,6 +174,8 @@ export class Board extends Component {
         for (let index = 1; index < historyGame.length ; index++) {
             historyItems.push(this.renderHistoryItem(index ))
         }
+        
+
 
         
         return <div className="containerTic">

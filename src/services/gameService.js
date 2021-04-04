@@ -35,11 +35,11 @@ const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
     }
 }
 
-const handleAcceptGame = async (game) =>  {
+const handleAcceptStartGame = async (game, gameStatus) =>  {
     try {
         let { uid: gameUid } = game;
         let gameReference = gamesRef.child(gameUid);
-        await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED);
+        await gameReference.child(DB_REF_GAME_KEYS.STATUS).set(gameStatus);
     } catch (error) {
         console.log(stringifyError(error));
     }
@@ -60,7 +60,6 @@ const handleDeclineCancelGame = async (game, gameStatus) =>  {
 
 
 const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
-    debugger
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
@@ -70,11 +69,9 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
     // I do not need to open the board page at first 
 });
 
-const subscribeChangedGames = ( authPlayer, history,  setModalOpen, updateAuthGame ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
+const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpen, comp ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, go to board both players
-    debugger
     let game = childSnapshot.val();
-    console.log(game, 'listening game changed. [canceled maybe]....'); 
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
         // close the moda
         setModalOpen(false);
@@ -95,8 +92,12 @@ const subscribeChangedGames = ( authPlayer, history,  setModalOpen, updateAuthGa
      else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.CANCELED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
         // route the player to dashboard
         console.log(game, 'official canceled'); 
-
+        updateAuthGame();
         history.push("/")
+    } else {
+        console.log('fall in else started', comp, game);
+        // started ??
+        updateAuthGame(game);
     }
 });
 
@@ -117,5 +118,5 @@ function isChallengeFromAuthPlayer(game, authPlayer) {
 }
 
 export {
-    handleCreateGame, handleAcceptGame, handleDeclineCancelGame, subscribeAddedGames, subscribeChangedGames, unsubscribeFromGames
+    handleCreateGame, handleAcceptStartGame, handleDeclineCancelGame, subscribeAddedGames, subscribeChangedGames, unsubscribeFromGames
 }

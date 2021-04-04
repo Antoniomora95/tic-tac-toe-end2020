@@ -2,7 +2,6 @@ import React , { useContext } from "react";
 import { Route, Redirect, useRouteMatch } from "react-router-dom";
 import { AuthContext } from '../authContext';
 import  { DB_REF_GAME_AVAILABLE_STATUSES } from '../../common/constants.json';
-const { ACCEPTED } = DB_REF_GAME_AVAILABLE_STATUSES;
 
 // every time a redirect will take place validate the current user, it should include token in the next commit (the token needs to be valid as well)
 
@@ -24,12 +23,12 @@ export const GameGuardRoute = ( { component: RouteComponent, ...rest } ) => {
     return(
         <Route
         {...rest}
-        render = { routeProps => !!currentGame && currentGame.uid && currentGame.status === ( ACCEPTED ) ?
+        render = { routeProps => !!currentGame && currentGame.uid && (currentGame.status === DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED || currentGame.status ===  DB_REF_GAME_AVAILABLE_STATUSES.STARTED ) ?
             ( <RouteComponent { ...routeProps }/>) :
             (  <Redirect to={`${path}dashboard`}/> )
         }
         />
     );
-}
+} 
 
 
