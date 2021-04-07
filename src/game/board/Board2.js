@@ -10,9 +10,9 @@ import { findOnePlayer } from '../../services/authService';
 
 
 
-function handleClick(index) {
-    let { isPlayingX, boardActualGame, historyGame } = this.state;
-    if (!calculateWinner(boardActualGame)) {
+function handleClick(index, currentGame) {
+    let { isPlayingX, board } = currentGame;
+    /*if (!calculateWinner(board)) {
         let cloneActualGame = JSON.parse(JSON.stringify(boardActualGame));
         historyGame = [...historyGame, cloneActualGame];
         cloneActualGame[index].value = isPlayingX ? 'X' : 'O';
@@ -23,24 +23,21 @@ function handleClick(index) {
                 historyGame: historyGame
             }
         });
-    }
+    }*/
 }
 
-function renderSquare({ id, value}, board) {
-    console.log(id, value, board, 'square')
+function renderSquare({ id, value}, currentGame) {
+    console.log(id, value, currentGame, 'square')
     return (
         <Square
-            key={id}
-            value={value}
-            winner={!!calculateWinner(board)}
-            onClickProp={() => handleClick(id)}
+            key={ id }
+            value={ value }
+            currentGame = { currentGame }
+            onClickProp={() => handleClick(id, currentGame)}
         />
     )
 }
-function condition(){
-
-}
-
+ 
 export const Board2 = ({ history }) => {
 
     const { currentUser, currentGame, updateAuthGame } = useContext(AuthContext);
@@ -48,7 +45,7 @@ export const Board2 = ({ history }) => {
     let { board } = currentGame;
     useEffect(() => {
         let mounted = true;
-        (async()=>{
+        (async()=>{       
             if( mounted ){
                 // subscribe to changes, then update [subscrip will listen]
                 subscribeChangedGames(currentUser, history, updateAuthGame, ()=> null, `board 2 compo ${currentUser.uid}`);
@@ -91,7 +88,7 @@ export const Board2 = ({ history }) => {
                 </div>
                 <div className="boardGrid">
                     {
-                        board && board.length && board.map(square => renderSquare(square, board))
+                        board && board.length && board.map(square => renderSquare(square, currentGame))
                     }
                 </div>
             </div>

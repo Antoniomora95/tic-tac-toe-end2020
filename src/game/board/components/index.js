@@ -10,12 +10,11 @@ const Square = ({ value, onClickProp, winner }) => {
         return () => null
     }, [value])
     return (
-        <button className="square" disabled={disabled} onClick={() => {
-            if( !winner ){
-                setDisabled(true)
-                onClickProp();
-            }
-        }}> { value }</button>
+        <button className="square" disabled={disabled || winner} onClick={() => { 
+            setDisabled(true);
+            onClickProp();
+            }}
+            > { value }</button>
     );
 }
 
