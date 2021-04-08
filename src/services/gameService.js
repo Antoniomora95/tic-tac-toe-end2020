@@ -34,6 +34,14 @@ const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
         console.log(stringifyError(error));
     }
 }
+const handleModifyGame = async (gameUid, gameUpdated) =>  {
+    try {
+        let gameReference = gamesRef.child(gameUid);
+        await gameReference.set(gameUpdated);
+    } catch (error) {
+        console.log(stringifyError(error));
+    }
+}
 
 const handleAcceptStartGame = async (game, gameStatus) =>  {
     try {
@@ -118,5 +126,11 @@ function isChallengeFromAuthPlayer(game, authPlayer) {
 }
 
 export {
-    handleCreateGame, handleAcceptStartGame, handleDeclineCancelGame, subscribeAddedGames, subscribeChangedGames, unsubscribeFromGames
+    handleCreateGame,
+    handleAcceptStartGame,
+    handleDeclineCancelGame,
+    subscribeAddedGames, 
+    subscribeChangedGames,
+    unsubscribeFromGames,
+    handleModifyGame
 }
