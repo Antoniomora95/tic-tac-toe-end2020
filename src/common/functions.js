@@ -20,11 +20,11 @@ const stringifyError = error => {
 }
 
 const getGameInstance = (game) => {
-    let { uid, status, player1, player2, nowPlaying, createdAt, board, winner } = game;
-    return new CatGame(uid, player1, player2, winner, status, createdAt, nowPlaying, board)
+    let { uid, status, player1, player2, nowPlaying, createdAt, board, winner, hasWinner } = game;
+    return new CatGame(uid, player1, player2, winner, hasWinner, status, createdAt, nowPlaying, board)
 }
 
-const calculateWinner = (squares) => {
+const calculateWinner = (squares ) => {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],

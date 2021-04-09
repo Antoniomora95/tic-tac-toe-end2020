@@ -77,12 +77,15 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
     // I do not need to open the board page at first 
 });
 
-const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpen, comp ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
+const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpen, updateLoadingBackend ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, go to board both players
     let game = childSnapshot.val();
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
-        // close the moda
+        // close the mod
         setModalOpen(false);
+        if(updateLoadingBackend){
+            updateLoadingBackend(false, `it is called in accpeted ${new Date().getTime()}`)
+        }
         updateAuthGame(getGameInstance(game));
         history.push("/board");
     }
@@ -99,12 +102,12 @@ const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpe
      // canceled status, auth is part of the game
      else if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.CANCELED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
         // route the player to dashboard
-        console.log(game, 'official canceled'); 
         updateAuthGame();
         history.push("/")
     } else {
-        console.log('fall in else started', comp, game);
-        // started ??
+        if(updateLoadingBackend){
+            updateLoadingBackend(false, 'after the service called');
+        }
         updateAuthGame(game);
     }
 });
