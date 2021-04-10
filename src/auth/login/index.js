@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../authContext';
 import { findOnePlayer, loginWithPopup, setPlayerOnline } from '../../services/authService';
 import { Player } from '../../common/Classes';
-import { stringifyError } from '../../common/functions';
+import { getTime, stringifyError } from '../../common/functions';
 
 export const Login = ({ history }) => {
     const { updateAuthUser } = useContext(AuthContext);
@@ -15,13 +15,13 @@ export const Login = ({ history }) => {
             if (!userDB) {
                 history.push("/signup");
             } else {
-                let { uid, name, email, imageUrl, isOnline, isPlaying, existentChallenge } = userDB;
+                let { isOnline, uid } = userDB;
                 if (!isOnline) {
-                    // if it was offline then it can access
-                    await setPlayerOnline(uidFirebase);
-                    let player = new Player(uid, name, email, imageUrl, true, isPlaying,  existentChallenge);
-                    updateAuthUser(player);
-                    history.push("/");
+                    // set online and set loggedAt
+                    await setPlayerOnline(uid);
+                    let loggedUser = await findOnePlayer(uid);
+                    updateAuthUser(loggedUser);
+                    history.push("/")
                 } else {
                     console.log('user already logged in');
                 }

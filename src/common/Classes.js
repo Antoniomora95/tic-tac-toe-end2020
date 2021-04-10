@@ -1,7 +1,8 @@
 import  { DB_REF_GAME_AVAILABLE_STATUSES } from './constants.json';
+import { getTime } from './functions';
 const { IS_NEW } = DB_REF_GAME_AVAILABLE_STATUSES;
  export class Player{
-    constructor(uid, name, email, imageUrl, isOnline = false, isPlaying = false, existentChallenge = false){
+    constructor(uid, name, email, imageUrl, isOnline = false, isPlaying = false, existentChallenge = false, loggedAt = getTime()){
         this.uid = uid;
         this.name = name;
         this.email = email;
@@ -9,6 +10,7 @@ const { IS_NEW } = DB_REF_GAME_AVAILABLE_STATUSES;
         this.isOnline = isOnline;
         this.isPlaying = isPlaying;
         this.existentChallenge = existentChallenge;
+        this.loggedAt = loggedAt;
     }
     
 }

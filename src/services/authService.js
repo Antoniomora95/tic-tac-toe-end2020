@@ -1,6 +1,6 @@
 
 import { DB_REF_PLAYERS_KEYS, DB_REF_GAME_AVAILABLE_STATUSES  } from '../common/constants.json';
-import { stringifyError } from '../common/functions';
+import { getTime, stringifyError } from '../common/functions';
 import { provider, app, playersRef }   from '../firebase/configuration';
 import { handleDeclineCancelGame } from './gameService'
 import { toogleIsPlaying } from './playerService';
@@ -24,8 +24,11 @@ export const loginWithPopup = async() => {
 }
 export const setPlayerOnline = async(uid) => {
     try {
+        // uid, name, email, imageUrl, isOnline = false, isPlaying = false, existentChallenge = false, loggedAt = new Date()
+        
         let playerReference = playersRef.child(uid);
-        return await  playerReference.child(DB_REF_PLAYERS_KEYS.IS_ONLINE).set(true);
+        let objectUpdate = {[DB_REF_PLAYERS_KEYS.IS_ONLINE]: true, [DB_REF_PLAYERS_KEYS.LOGGED_AT]: getTime()}
+        return await playerReference.update(objectUpdate); 
     } catch (error) {
         throw error;
     }

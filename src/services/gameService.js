@@ -70,6 +70,7 @@ const handleDeclineCancelGame = async (game, gameStatus) =>  {
 const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
+      console.log('it runs when added game, new');
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
         setChallenge(game);
         setModalOpen(true);
@@ -80,6 +81,7 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
 const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpen, updateLoadingBackend ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, go to board both players
     let game = childSnapshot.val();
+    console.log('it runs when changed  game, new anyways');
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
         // close the mod
         setModalOpen(false);

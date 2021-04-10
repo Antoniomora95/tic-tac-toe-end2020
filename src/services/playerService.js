@@ -1,7 +1,7 @@
 
 import { Player } from "../common/Classes";
 import { DB_REF_PLAYERS_KEYS } from '../common/constants.json';
-import { stringifyError } from "../common/functions";
+import { getTime, stringifyError } from "../common/functions";
 import {  playersRef } from "../firebase/configuration";
 
 
@@ -53,8 +53,8 @@ function transformToArray(object) {
     let players = [];
     Object.keys(object).forEach((key) => {
         let player = object[key];
-        let { uid, name, email, imageUrl, isOnline, isPlaying, existentChallenge } = player;
-        players.push(new Player(uid, name, email, imageUrl, isOnline, isPlaying, existentChallenge));
+        let { uid, name, email, imageUrl, isOnline, isPlaying, existentChallenge, loggedAt } = player;
+        players.push(new Player(uid, name, email, imageUrl, isOnline, isPlaying, existentChallenge, loggedAt));
     });
     return players;
 }

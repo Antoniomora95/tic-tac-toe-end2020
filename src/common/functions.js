@@ -1,5 +1,6 @@
 import { CatGame } from "./Classes";
 
+let getTime = () => new Date().getTime();
 let isValidUser = (currentUser) => currentUser && currentUser.uid
 let isValidGame = (game) => game && game.uid;
 const gameNotAllowed = (authPlayer, player) => authPlayer.uid === player.uid;
@@ -47,5 +48,5 @@ const calculateWinner = (squares ) => {
 }
 
 export {
-    isValidUser, gameNotAllowed, isPlaying, isExistentChallenge, stringifyError, getGameInstance, calculateWinner, isValidGame
+    isValidUser, gameNotAllowed, isPlaying, isExistentChallenge, stringifyError, getGameInstance, calculateWinner, isValidGame, getTime
 }

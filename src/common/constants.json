@@ -4,7 +4,8 @@
     "DB_REF_PLAYERS_KEYS": {
         "IS_ONLINE" : "isOnline",
         "IS_PLAYING": "isPlaying",
-        "EXISTENT_CHALLENGE": "existentChallenge"
+        "EXISTENT_CHALLENGE": "existentChallenge",
+        "LOGGED_AT": "loggedAt"
     },
     "DB_REF_GAME_KEYS": {
         "CREATED_AT" : "createdAt",

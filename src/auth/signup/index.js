@@ -5,15 +5,16 @@ import {
   signupPlayer
 } from "../../services/authService";
 import { Player } from "../../common/Classes";
-import { stringifyError } from "../../common/functions";
+import { getTime, stringifyError } from "../../common/functions";
 
 export const SignUp = ({ history }) => {
   const { updateAuthUser } = useContext(AuthContext);
   const callback = async () => {
     try {
       let { displayName, email, photoURL, uid } = await loginWithPopup();
-      let player = new Player(uid, displayName, email, photoURL, true);
-      let registered = signupPlayer(player);
+      let player = new Player(uid, displayName, email, photoURL, true, false, false);
+      console.log(player);
+      let registered = await signupPlayer(player);
       if (registered) {
         updateAuthUser(player);
         history.push("/");
