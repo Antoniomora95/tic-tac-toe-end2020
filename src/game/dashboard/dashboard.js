@@ -72,7 +72,7 @@ export const Dashboard = ({ history }) => {
             unsubscribeFromGames();
             isMounted = false;
         } 
-    }, [])
+    })
     return (
 
         <div className='container'>

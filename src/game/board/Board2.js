@@ -37,7 +37,7 @@ export const Board2 = ({ history }) => {
             mounted = false;
             unsubscribeFromGames();
         }
-    }, [])
+    })
 
     useEffect(() => {
         let mounted = true;
