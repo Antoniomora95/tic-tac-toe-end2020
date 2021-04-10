@@ -48,7 +48,6 @@ export const signOutPlayer = (updateAuthUser, updateAuthGame, uid, currentGame) 
         try {
             // set user offline, set false existent challenge and cancel game
             let playerReference = playersRef.child(uid);
-            let challengeClosed = false;
             if(currentGame && currentGame.uid) {
                 let { player1: player1Uid, player2: player2Uid, status } = currentGame;
                 // do not cancel a game that was already won [finished]

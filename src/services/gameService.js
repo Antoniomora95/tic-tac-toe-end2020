@@ -21,7 +21,7 @@ const handleCreateGame = async (authPlayer, challengedPlayer, disableView) => {
                 let gameUid = gamesRef.push().key;
                 let game = new CatGame(gameUid, authPlayerUid, challengedPlayerUid);
                 let gameReference = gamesRef.child(gameUid);
-                let gameSet = await gameReference.set(game);
+                await gameReference.set(game);
                 await Promise.all([toogleExistentGame(authPlayerUid, true), toogleExistentGame(challengedPlayerUid, true)]);
             } else {
                 throw new Error(`There is an existent challenge for 1 or both players :(`);
