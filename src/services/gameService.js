@@ -70,8 +70,7 @@ const handleDeclineCancelGame = async (game, gameStatus) =>  {
 const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesRef.on('child_added', (childSnapshot, prevChildKey) => {
     let game = childSnapshot.val();
       // is_new status and auth player is challenged
-      console.log('it runs when added game, new');
-    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer)) {
+    if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.IS_NEW) && isValidUser(authPlayer) && isChallengeForAuthPlayer(game, authPlayer) && authPlayer.loggedAt <=  game.createdAt) {
         setChallenge(game);
         setModalOpen(true);
     }

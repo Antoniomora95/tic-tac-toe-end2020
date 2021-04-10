@@ -51,7 +51,7 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
       <div className="modal-card has-text-dark">
         <header className="modal-card-head">
           <p className="modal-card-title">New game challenge</p>
-          <small className="pr-2">Sent on: {challenge.createdAt}</small>
+          <small className="pr-2">Sent on: {new Date(challenge.createdAt).toLocaleString()}</small>
           <button className="delete" aria-label="close" onClick={() => handleDeclineCancelGame(challenge, DB_REF_GAME_AVAILABLE_STATUSES.DECLINED)}></button>
         </header>
         <section className="modal-card-body has-text-dark">
