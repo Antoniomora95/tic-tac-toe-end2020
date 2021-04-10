@@ -3,7 +3,7 @@ import { DB_REF_PLAYERS_KEYS, DB_REF_GAME_AVAILABLE_STATUSES  } from '../common/
 import { getTime, stringifyError } from '../common/functions';
 import { provider, app, playersRef }   from '../firebase/configuration';
 import { handleDeclineCancelGame } from './gameService'
-import { toogleIsPlaying } from './playerService';
+import { toogleExistentGame, toogleIsPlaying } from './playerService';
 // https://firebase.google.com/docs/database/web/read-and-write?authuser=0
 export const signupPlayer = async (player) => {
     try {
@@ -48,12 +48,25 @@ export const signOutPlayer = (updateAuthUser, updateAuthGame, uid, currentGame) 
         try {
             // set user offline, set false existent challenge and cancel game
             let playerReference = playersRef.child(uid);
+            let challengeClosed = false;
             if(currentGame && currentGame.uid) {
-                let { player1: player1Uid, player2: player2Uid } = currentGame;
-                await handleDeclineCancelGame(currentGame, DB_REF_GAME_AVAILABLE_STATUSES.CANCELED);
-                await Promise.all([toogleIsPlaying(player1Uid, false), toogleIsPlaying(player2Uid, false)]);
+                let { player1: player1Uid, player2: player2Uid, status } = currentGame;
+                // do not cancel a game that was already won [finished]
+                if(status === DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED || status === DB_REF_GAME_AVAILABLE_STATUSES.STARTED) {
+                    await handleDeclineCancelGame(currentGame, DB_REF_GAME_AVAILABLE_STATUSES.CANCELED);
+                }
+                await Promise.all(
+                    [
+                        toogleIsPlaying(player1Uid, false),
+                        toogleIsPlaying(player2Uid, false),
+                        toogleExistentGame(player1Uid, false),
+                        toogleExistentGame(player2Uid, false),
+                        playerReference.child(DB_REF_PLAYERS_KEYS.IS_ONLINE).set(false)
+                    ]
+                    );
+            } else {
+                await playerReference.child(DB_REF_PLAYERS_KEYS.IS_ONLINE).set(false);
             }
-            await playerReference.child(DB_REF_PLAYERS_KEYS.IS_ONLINE).set(false);
             updateAuthUser();
             updateAuthGame();
             await app.auth().signOut();  
