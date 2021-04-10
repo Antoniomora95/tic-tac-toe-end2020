@@ -1,7 +1,7 @@
 
 import { Player } from "../common/Classes";
 import { DB_REF_PLAYERS_KEYS } from '../common/constants.json';
-import { getTime, stringifyError } from "../common/functions";
+import { stringifyError } from "../common/functions";
 import {  playersRef } from "../firebase/configuration";
 
 

@@ -1,7 +1,7 @@
 
 import './App.css';
 import 'bulma/css/bulma.css';
-import { BrowserRouter as Router, Route, Switch, useRouteMatch, Redirect, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Login } from './auth/login';
 import { SignUp } from './auth/signup'
 import { GameOutlet } from './game/gameOutlet';
@@ -27,7 +27,7 @@ function App() {
   );
 }
 //IT SEEMS EXACT IN AuthGuardRoute WAS MESSING UP THE REDIRECT WHEN NO SESSION
-
+/*
 const Task = () => {
   let { path, url } = useRouteMatch();
   return (<>
@@ -47,7 +47,7 @@ const Task = () => {
 
   )
 }
-
+*/
 export default App;
 
 //<Route exact path="**" component={SignUp} />

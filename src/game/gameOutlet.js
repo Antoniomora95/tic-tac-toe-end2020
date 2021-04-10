@@ -1,7 +1,6 @@
 import React from 'react';
 import { Switch, Route, Redirect, useRouteMatch, NavLink } from "react-router-dom";
 import { GameGuardRoute } from '../auth/guard';
-import { Board } from './board/Board';
 import { Board2 } from './board/Board2';
 import { Dashboard } from './dashboard/dashboard';
 

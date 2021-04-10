@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../auth/authContext';
-import { calculateWinner, isValidGame, isValidUser } from '../../common/functions';
-import { subscribeChangedGames, unsubscribeFromGames, handleAcceptStartGame } from '../../services/gameService';
+import { isValidGame, isValidUser } from '../../common/functions';
+import { subscribeChangedGames, unsubscribeFromGames } from '../../services/gameService';
 import { Square, MovementAndWinner } from './components/index';
-import { DB_REF_GAME_AVAILABLE_STATUSES } from '../../common/constants.json';
 import './Board.css';
 import { findOnePlayer } from '../../services/authService';
 
