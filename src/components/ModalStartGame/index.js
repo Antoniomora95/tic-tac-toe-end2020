@@ -44,7 +44,8 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
         }
       })()
       return () =>  null
-  }, [countdown])
+      // challenge is not used here, but let's trhy
+  }, [countdown, challenge])
   return (
     <div className={`modal ${setModalClasses(modalOpen)}`}>
       <div className="modal-background"></div>
