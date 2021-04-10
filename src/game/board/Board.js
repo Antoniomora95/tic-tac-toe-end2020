@@ -1,4 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
+import { AuthContext } from '../../auth/authContext';
+import {subscribeChangedGames, unsubscribeFromGames } from '../../services/gameService';
 import './Board.css';
 const calculateWinner = (squares) => {
     const lines = [
@@ -30,7 +32,6 @@ export class SquareObj {
 const Square = ({ value, onClickProp, winner }) => {
     const [disabled, setDisabled] = useState(false);
     useEffect(() => {
-        console.log('run effect', disabled);
         if(!value && disabled){
             // if the square receive an empty value and it was previously disabled, then enable it again
             setDisabled(false);
@@ -51,14 +52,16 @@ const HistoryItem = ({ index, onClickFn }) => {
 }
 const MovementOrWinnerView = ({ boardActualGame, isPlayingX }) => {
     const calculated = calculateWinner(boardActualGame);
+    
     if (boardActualGame && boardActualGame.length && calculated) {
         return <h4>The winner is {calculated}</h4>
     }
     return <h4>The next movement is: {isPlayingX ? 'X': 'O'}</h4>
 }
 export class Board extends Component {
-    constructor() {
-        super();
+    static contextType = AuthContext;
+    constructor(props) {
+        super(props);
         this.state = {
             isPlayingX: true,
             boardActualGame: [],
@@ -71,7 +74,15 @@ export class Board extends Component {
                 ...state,
                 boardActualGame: this.fillInitialArray(9)
             }
-        })
+        });
+        const { currentUser: authPlayer } = this.context;
+        let { history } = this.props;
+        subscribeChangedGames(authPlayer, history)
+    }
+
+
+    componentWillUnmount(){
+        unsubscribeFromGames()
     }
     fillInitialArray(length_) {
         var arr = new Array(length_);
@@ -80,8 +91,13 @@ export class Board extends Component {
         }
         return arr;
     }
+
+
+
+
+
+
     handleClick(index) {
-        console.log('click');
         let { isPlayingX, boardActualGame, historyGame } = this.state;
         if (!calculateWinner(boardActualGame)) {
             let cloneActualGame = JSON.parse(JSON.stringify(boardActualGame));
@@ -96,15 +112,14 @@ export class Board extends Component {
             });
         }
     }
+
+
+
+
     goToMovement(index) {
         let { historyGame } = this.state;
 
         let boardGameAt = historyGame[index - 1];
-        // index strts at 1
-        //  array.slice(start, end (not included))
-        //const animals = ['ant', 'bison'];
-        //console.log(animals.slice(0, 1));
-        // output:  ["ant"]
         let gameHistoryAt = this.state.historyGame.slice(0, index)
         this.setState(state => {
             return {
@@ -114,6 +129,13 @@ export class Board extends Component {
             }
         })
     }
+
+    
+
+
+
+
+
     renderSquare({ id, value }) {
         return (
             <Square
@@ -124,6 +146,9 @@ export class Board extends Component {
             />
         )
     }
+
+
+
     renderHistoryItem(index) {
         return (
             <HistoryItem
@@ -134,12 +159,24 @@ export class Board extends Component {
         )
 
     }
+
+
+
+
+
+
     render() {
         const { boardActualGame, historyGame, isPlayingX } = this.state;
         const historyItems = [];
+
+
         for (let index = 1; index < historyGame.length ; index++) {
             historyItems.push(this.renderHistoryItem(index ))
         }
+        
+
+
+        
         return <div className="containerTic">
             <div className="boardWrapper">
                 <div className="boardTitle">

@@ -1,0 +1,23 @@
+{
+    "DB_REF_PLAYERS": "players",
+    "DB_REF_GAME": "games",
+    "DB_REF_PLAYERS_KEYS": {
+        "IS_ONLINE" : "isOnline",
+        "IS_PLAYING": "isPlaying",
+        "EXISTENT_CHALLENGE": "existentChallenge",
+        "LOGGED_AT": "loggedAt"
+    },
+    "DB_REF_GAME_KEYS": {
+        "CREATED_AT" : "createdAt",
+        "UID": "uid",
+        "STATUS": "status"
+    },
+    "DB_REF_GAME_AVAILABLE_STATUSES" : {
+        "IS_NEW" : "is_new",
+        "ACCEPTED": "accepted",
+        "DECLINED": "declined",
+        "STARTED": "started",
+        "CANCELED": "canceled",
+        "FINISHED": "finished"
+    }
+}

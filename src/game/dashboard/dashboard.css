@@ -1,0 +1,15 @@
+
+
+.d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.join {
+    background-color: coral;
+    cursor: pointer;
+}
+.start-new {
+    background-color: darkseagreen;
+    cursor: pointer;
+}

@@ -51,3 +51,8 @@
     padding: 6px 10px;
     text-align: center;
 }
+
+.hasWinner {
+    color: tomato;
+    font-weight: 600;
+}
