@@ -23,7 +23,7 @@ export const GameGuardRoute = ( { component: RouteComponent, ...rest } ) => {
     return(
         <Route
         {...rest}
-        render = { routeProps => !!currentGame && currentGame.uid && (currentGame.status === DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED || currentGame.status ===  DB_REF_GAME_AVAILABLE_STATUSES.STARTED ) ?
+        render = { routeProps => !!currentGame && currentGame.uid && (currentGame.status === DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED || currentGame.status ===  DB_REF_GAME_AVAILABLE_STATUSES.STARTED || currentGame.status ===  DB_REF_GAME_AVAILABLE_STATUSES.FINISHED) ?
             ( <RouteComponent { ...routeProps }/>) :
             (  <Redirect to={`${path}dashboard`}/> )
         }

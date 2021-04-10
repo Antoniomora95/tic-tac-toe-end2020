@@ -1,9 +1,9 @@
 import { calculateWinner, stringifyError } from "../../../common/functions";
 import { handleModifyGame } from "../../../services/gameService";
-
+import { DB_REF_GAME_AVAILABLE_STATUSES } from "../../../common/constants.json"
 let handleClick = async (boardIndex, currentGame, updateLoadingBackend) => {
     try {
-        let { nowPlaying: nowPlayingUid, player1: player1Uid, player2: player2Uid, uid: gameUid } = currentGame;
+        let { nowPlaying: nowPlayingUid, player1: player1Uid, player2: player2Uid, uid: gameUid, status } = currentGame;
         let value = nowPlayingUid === player1Uid ? 'X' : 'O';
         let newPlayerPlaying = nowPlayingUid === player1Uid ? player2Uid : player1Uid;
         // avoid messing up state rules
@@ -15,11 +15,16 @@ let handleClick = async (boardIndex, currentGame, updateLoadingBackend) => {
             nowPlaying: newPlayerPlaying,
             board
         }
-        // pass the updated board to calculateWinner()
+        //if first move --> started game
+        // if winner
+        if(status === DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) {
+            currentGameCopy = {...currentGameCopy, status: DB_REF_GAME_AVAILABLE_STATUSES.STARTED}
+        }
         let gameHasWinner = calculateWinner(board);
         if (!!gameHasWinner){
             currentGameCopy.hasWinner = true;
             currentGameCopy.winner = nowPlayingUid;
+            currentGameCopy.status = DB_REF_GAME_AVAILABLE_STATUSES.FINISHED;
         }
         updateLoadingBackend(true, `before the service called ${new Date().getTime()}`);
         await handleModifyGame(gameUid, currentGameCopy)
