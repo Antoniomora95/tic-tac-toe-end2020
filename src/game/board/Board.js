@@ -77,7 +77,6 @@ export class Board extends Component {
         });
         const { currentUser: authPlayer } = this.context;
         let { history } = this.props;
-        console.log('board...');
         subscribeChangedGames(authPlayer, history)
     }
 

@@ -80,12 +80,11 @@ const subscribeAddedGames = ( authPlayer, setChallenge, setModalOpen ) => gamesR
 const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpen, updateLoadingBackend ) => gamesRef.on('child_changed', (childSnapshot, prevChildKey) => {
     // accepted status, go to board both players
     let game = childSnapshot.val();
-    console.log('it runs when changed  game, new anyways');
     if(game && gameHasStatus(game, DB_REF_GAME_AVAILABLE_STATUSES.ACCEPTED) && isValidUser(authPlayer) && (isChallengeFromAuthPlayer(game, authPlayer) || isChallengeForAuthPlayer(game, authPlayer))){
         // close the mod
         setModalOpen(false);
         if(updateLoadingBackend){
-            updateLoadingBackend(false, `it is called in accpeted ${new Date().getTime()}`)
+            updateLoadingBackend(false, `it is called in accepted ${new Date().getTime()}`)
         }
         updateAuthGame(getGameInstance(game));
         history.push("/board");
@@ -109,7 +108,7 @@ const subscribeChangedGames = ( authPlayer, history, updateAuthGame, setModalOpe
         if(updateLoadingBackend){
             updateLoadingBackend(false, 'after the service called');
         }
-        updateAuthGame(game);
+        updateAuthGame(getGameInstance(game));
     }
 });
 

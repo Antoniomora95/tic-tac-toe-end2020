@@ -16,25 +16,20 @@ export const Board2 = ({ history }) => {
     const [loadingBackend, setLoadingBackend] = useState(false);
     let updateLoadingBackend = (loadingBackend, fromWhere) => {
         setLoadingBackend(loadingBackend);
-        console.log('what the fuck', loadingBackend, fromWhere);
     }
     let { board } = currentGame;
     let { uid: uidAuthPlayer } = currentUser;
-    console.log(uidAuthPlayer);
     useEffect(() => {
         let mounted = true;
-        console.log('so, dores the effect run in each render?');
         (async()=>{       
             if( mounted ){
                 // subscribe to changes, then update [subscrip will listen]
                 subscribeChangedGames(currentUser, history, updateAuthGame, ()=> null, updateLoadingBackend );
                 if(currentUser && currentGame && currentUser.uid === currentGame.player1){
                     let otherPlayer = await findOnePlayer(currentGame.player2);
-                    console.log('the other player is.', otherPlayer);
                     setOtherPlayer(otherPlayer);
                 } else if(currentUser && currentGame && currentUser.uid === currentGame.player2) {
                     let otherPlayer = await findOnePlayer(currentGame.player1);
-                    console.log('the other player is.', otherPlayer);
                     setOtherPlayer(otherPlayer);
                 } 
             }
