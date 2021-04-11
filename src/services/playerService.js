@@ -35,11 +35,11 @@ export const toogleExistentGame = async(uid, existentChallenge) => {
 }
 
 export const subscribeChangedPlayers = (setPlayers) => playersRef.on('child_changed', (childSnapshot, prevChildKey) => {
-    console.log('child changed');
+    console.log('child changed', childSnapshot.val().uid);
     getPlayersOnline(setPlayers);
 });
 export const subscribeAddedPlayers = (setPlayers) => playersRef.on('child_added', (childSnapshot, prevChildKey) => {
-    console.log('child added');
+    console.log('child added', childSnapshot.val().uid);
     getPlayersOnline(setPlayers);
 });
  

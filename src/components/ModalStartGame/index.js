@@ -14,7 +14,9 @@ export const ModalStartGame = ({ modalOpen, nameAuthPlayer, challenge }) => {
     (async () => {
       try {
         if (challenge && challenge.uid && isMounted) {
+          console.log('so, is this running every second again?? ');
           interval = setInterval(() => {
+            // is not the same setCountdown(countdown => countdown - 1); than setCountdown(countdown - 1);
             setCountdown(countdown => countdown - 1);
           }, 1000);
           // who sent the challenge ?

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useCallback, useState } from 'react';
 import { TitleH3 } from '../../components/TitleH3';
 import { AuthContext } from '../../auth/authContext';
 import { handleCreateGame } from '../../services/gameService';
@@ -48,35 +48,45 @@ export const Dashboard = ({ history }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [disableView, setDisableView] = useState(false);
 
-// once you are logged in please ensure all your new, accepted, started games go to canceled ?? maybe  
-
+    // once you are logged in please ensure all your new, accepted, started games go to canceled ?? maybe  
     const { name } = authPlayer;
-    useEffect(() => {
-        let isMounted = true;
-        (async () => {
-            try {
-                if (isMounted) {
+
+    let callbackFirstRender = useCallback(() => {
+            (async () => {
+                console.log('dashboard effect just once...');
+                try {
                     subscribeChangedPlayers(setPlayers);
                     subscribeAddedPlayers(setPlayers);
 
                     subscribeChangedGames(authPlayer, history, updateAuthGame, setModalOpen);
-                    subscribeAddedGames(authPlayer,  setChallenge, setModalOpen);
+                    subscribeAddedGames(authPlayer, setChallenge, setModalOpen);
+
+                } catch (error) {
+                    console.log(stringifyError(error));
                 }
-            } catch (error) {
-                console.log(stringifyError(error));
-            }
-        })()
+            })()
+        },
+        [authPlayer, history, updateAuthGame]
+    )
+    useEffect(() => {
+        //console.log('running without empty array dependency');
+        let isMounted = true;
+        if (isMounted) {
+            callbackFirstRender()
+        }
         return () => {
             // when commented you will see how react tries to update the state, but that reference no longer exist since the component was unmounted
             unsubscribeFromPlayers();
             unsubscribeFromGames();
             isMounted = false;
-        } 
-    })
+        }
+
+        // understand how this empty array really affects
+    }, [callbackFirstRender])
     return (
 
         <div className='container'>
-            
+
 
             {
                 isValidUser(authPlayer) ? <>
@@ -93,3 +103,19 @@ export const Dashboard = ({ history }) => {
         </div>
     )
 }
+
+
+
+/*function Counter() {
+    https://overreacted.io/a-complete-guide-to-useeffect/#dont-lie-to-react-about-dependencies
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCount(count => count + 1);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return <h1>{count} this is from antonip</h1>;
+}*/

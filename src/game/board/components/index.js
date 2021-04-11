@@ -1,6 +1,7 @@
 import { calculateWinner, stringifyError } from "../../../common/functions";
 import { handleModifyGame } from "../../../services/gameService";
-import { DB_REF_GAME_AVAILABLE_STATUSES } from "../../../common/constants.json"
+import { DB_REF_GAME_AVAILABLE_STATUSES } from "../../../common/constants.json";
+
 let handleClick = async (boardIndex, currentGame, updateLoadingBackend) => {
     try {
         let { nowPlaying: nowPlayingUid, player1: player1Uid, player2: player2Uid, uid: gameUid, status } = currentGame;
